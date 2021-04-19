@@ -1,3 +1,5 @@
+const fs = require('fs')
+
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -7,6 +9,22 @@ var helmet = require('helmet');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+
+process.on('uncaughtException', function (err) {
+  console.error(err)
+  console.error(err.stack)
+})
+
+const rootDir = path.join(__dirname, './')
+const envPath = path.join(rootDir, (process.env.NODE_ENV === 'test') ? '.env.test' : '.env')
+
+if (fs.existsSync(envPath)) {
+  console.log(`> read ${envPath}`)
+  const result = require('dotenv').config()
+  if (result.error) {
+    throw result.error
+  }
+}
 
 var app = express();
 app.use(helmet());
