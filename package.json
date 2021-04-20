@@ -16,7 +16,11 @@
     "morgan": "~1.9.0",
     "passport": "0.3.2",
     "passport-github2": "0.1.9",
-    "pug": "2.0.0-beta11"
+    "pg": "^8.6.0",
+    "pg-hstore": "^2.3.3",
+    "pug": "2.0.0-beta11",
+    "sequelize": "^6.6.2",
+    "sequelize-cli": "^6.2.0"
   },
   "devDependencies": {
     "dotenv": "^8.2.0",
