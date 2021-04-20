@@ -7,6 +7,8 @@
     "dev": "DEBUG=express-mvc:* PORT=8000 nodemon ./bin/www"
   },
   "dependencies": {
+    "@babel/core": "^7.13.15",
+    "@babel/register": "^7.13.14",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
     "express": "~4.16.0",
