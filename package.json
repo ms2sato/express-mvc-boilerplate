@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "dev": "DEBUG=express-mvc:* PORT=8000 node ./bin/www"
+    "dev": "DEBUG=express-mvc:* PORT=8000 nodemon ./bin/www"
   },
   "dependencies": {
     "cookie-parser": "~1.4.3",
@@ -19,6 +19,7 @@
     "pug": "2.0.0-beta11"
   },
   "devDependencies": {
-    "dotenv": "^8.2.0"
+    "dotenv": "^8.2.0",
+    "nodemon": "^2.0.7"
   }
 }
