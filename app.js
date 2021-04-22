@@ -25,30 +25,10 @@ if (fs.existsSync(envPath)) {
   }
 }
 
-var GitHubStrategy = require('passport-github2').Strategy;
-
-passport.serializeUser(function(user, done) {
-  done(null, user);
-});
-
-passport.deserializeUser(function(obj, done) {
-  done(null, obj);
-});
-
-const gitHubConfig = {
-  clientID: process.env.GITHUB_CLIENT_ID,
-  clientSecret: process.env.GITHUB_CLIENT_SECRET,
-  callbackURL: '/auth/github/callback'
-};
-
-passport.use(new GitHubStrategy(gitHubConfig, function(accessToken, refreshToken, profile, done) {
-  process.nextTick(function() {
-    return done(null, profile)
-  })
-}));
-
 var indexRouter = require('./routes/index');
+var authRouter = require('./routes/auth');
 var usersRouter = require('./routes/users');
+
 
 var app = express();
 app.use(helmet());
@@ -67,30 +47,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/', indexRouter);
+app.use('/', authRouter);
 app.use('/users', ensureAuthenticated, usersRouter);
 
-app.get('/auth/github', 
-  passport.authenticate('github', { scope: ['user:email'] }), 
-  function(req, res) {
-
-  }
-);
-
-app.get('/auth/github/callback',
-  passport.authenticate('github', {failureRedirect: 'login'}),
-  function(req, res) {
-    res.redirect('/');
-  }
-);
-
-app.get('/login', (req, res, next) => {
-  res.render('login', { user: req.user });
-});
-
-app.get('/logout', (req, res, next) => {
-  req.logout();
-  res.redirect('/');
-});
 
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
