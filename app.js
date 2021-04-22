@@ -8,6 +8,7 @@ var logger = require('morgan');
 var helmet = require('helmet');
 var session = require('express-session');
 var passport = require('passport');
+var methodOverride = require('method-override')
 
 process.on('uncaughtException', function (err) {
   console.error(err)
@@ -44,6 +45,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(session( { secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false} ));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(methodOverride('X-HTTP-Method-Override'));
+app.use(methodOverride('_method'));
 
 app.use('/', indexRouter);
 app.use('/', authRouter);
