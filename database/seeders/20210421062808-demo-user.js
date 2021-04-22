@@ -8,6 +8,8 @@ module.exports = {
       username: 'user1',
       displayName: 'User1',
       email: 'user1@example.com',
+      accessToken: 'accessToken',
+      refreshToken: 'refreshToken',
       createdAt: new Date(),
       updatedAt: new Date()
     }, {
@@ -16,6 +18,8 @@ module.exports = {
       username: 'user2',
       displayName: 'User2',
       email: 'user2@example.com',
+      accessToken: 'accessToken',
+      refreshToken: 'refreshToken',
       createdAt: new Date(),
       updatedAt: new Date()
     }]);
