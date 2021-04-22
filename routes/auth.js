@@ -11,32 +11,37 @@ const gitHubConfig = {
   callbackURL: '/auth/github/callback'
 };
 
-passport.serializeUser(function (user, done) {
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+passport.deserializeUser(async (userId, done) => {
+  const user = await models.User.findByPk(userId);
+  if(!user) {
+    return done(new Error('session data error'), null);
+  }
+
   done(null, user);
 });
 
-passport.deserializeUser(function (obj, done) {
-  done(null, obj);
-});
-
-passport.use(new GitHubStrategy(gitHubConfig, async function (accessToken, refreshToken, profile, done) {
-  console.log(refreshToken, accessToken)
+passport.use(new GitHubStrategy(gitHubConfig, async (accessToken, refreshToken, profile, done) => {
   const user = await models.User.signIn({
     provider: profile.provider,
     uid: profile.id,
     username: profile.username,
     displayName: profile.displayName || profile.username,
     email: profile.emails[0].value,
-    accessToken, refreshToken
+    accessToken, 
+    refreshToken
   })
   done(null, user)
 }));
 
 router.get('/auth/github', passport.authenticate('github', { scope: ['user:email'] }));
 
-router.get('/auth/github/callback',
+router.get(gitHubConfig.callbackURL,
   passport.authenticate('github', { failureRedirect: 'login' }),
-  function (req, res) {
+  (req, res) => {
     res.redirect('/');
   }
 );

@@ -29,7 +29,6 @@ var indexRouter = require('./routes/index');
 var authRouter = require('./routes/auth');
 var usersRouter = require('./routes/users');
 
-
 var app = express();
 app.use(helmet());
 
