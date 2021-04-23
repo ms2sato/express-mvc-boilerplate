@@ -11,50 +11,50 @@ const posts = [
 class PostsController extends Controller {
   // GET /
   index(req, res) {
-    debug(req.params)    
-    res.render('posts/index', { posts: posts })
+    debug(req.params);
+    res.render('posts/index', { posts: posts });
   }
 
   // GET /create
   create(req, res) {
-    debug(req.params)
-    res.render('posts/create', { post: { title: '', body: '' } })
+    debug(req.params);
+    res.render('posts/create', { post: { title: '', body: '' } });
   }
 
   // POST /
   store(req, res) {
     // TODO: 新規作成
-    res.redirect('/posts/')
+    res.redirect('/posts/');
   }
 
   // GET /:id
   show(req, res) {
-    debug(req.params)
-    const post = posts[req.params.post-1];
-    res.render('posts/show', { post })
+    debug(req.params);
+    const post = posts[req.params.post - 1];
+    res.render('posts/show', { post });
   }
 
   // GET /:id/edit
   edit(req, res) {
-    debug(req.params)
-    const post = posts[req.params.post-1];
-    res.render('posts/edit', { post })
+    debug(req.params);
+    const post = posts[req.params.post - 1];
+    res.render('posts/edit', { post });
   }
 
   // PUT or PATCH /:id
   update(req, res) {
     debug(req.params);
-    const post = posts[req.params.post-1];
+    //const post = posts[req.params.post - 1];
     // TODO: 編集
-    res.redirect(`/posts/${req.params.post}`)
+    res.redirect(`/posts/${req.params.post}`);
   }
 
   // DELETE /:id
   destroy(req, res) {
-    debug(req.params)
+    debug(req.params);
     // TODO: 削除
-    res.redirect('/posts/')
+    res.redirect('/posts/');
   }
 }
 
-module.exports = PostsController
+module.exports = PostsController;

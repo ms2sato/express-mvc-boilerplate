@@ -9,12 +9,12 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
+    static associate(_models) {
       // define association here
     }
 
     static async signIn(params) {
-      const user = await this.findOne({ where: { provider: params.provider, uid: params.uid } })
+      const user = await this.findOne({ where: { provider: params.provider, uid: params.uid } });
       if(user) {
         user.username = params.username;
         user.accessToken = params.accessToken;
@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
         return await this.create(params);
       }
     }
-  };
+  }
   User.init({
     provider: DataTypes.STRING,
     uid: DataTypes.STRING,

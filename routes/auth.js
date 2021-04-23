@@ -33,8 +33,8 @@ passport.use(new GitHubStrategy(gitHubConfig, async (accessToken, refreshToken, 
     email: profile.emails[0].value,
     accessToken, 
     refreshToken
-  })
-  done(null, user)
+  });
+  done(null, user);
 }));
 
 router.get('/auth/github', passport.authenticate('github', { scope: ['user:email'] }));
@@ -46,11 +46,11 @@ router.get(gitHubConfig.callbackURL,
   }
 );
 
-router.get('/login', (req, res, next) => {
+router.get('/login', (req, res, _next) => {
   res.render('login', { user: req.user });
 });
 
-router.get('/logout', (req, res, next) => {
+router.get('/logout', (req, res, _next) => {
   req.logout();
   res.redirect('/');
 });

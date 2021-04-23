@@ -48,7 +48,7 @@ module.exports = {
 
     await queryInterface.addIndex('Users', ['provider', 'uid'], { unique: true });
   },
-  down: async (queryInterface, Sequelize) => {
+  down: async (queryInterface, _Sequelize) => {
     await queryInterface.removeIndex('Users', ['provider', 'uid']);
     await queryInterface.dropTable('Users');
   }

@@ -1,8 +1,8 @@
-const { Route } = require('../lib/route')
+const { Route } = require('../lib/route');
 
 const route = new Route();
 
-route.get('/', function(req, res, next) {
+route.get('/', function (req, res, _next) {
   res.render('index', { title: 'Express', user: req.user });
 });
 
