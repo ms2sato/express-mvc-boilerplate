@@ -25,6 +25,7 @@ const helmet = require('helmet');
 const session = require('express-session');
 const passport = require('passport');
 const methodOverride = require('method-override');
+const csrf = require('csurf');
 
 const app = express();
 app.use(helmet());
@@ -41,6 +42,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(csrf());
+app.use((req, res, next) => {
+  const csrfToken = req.csrfToken();
+  res.locals.csrfToken = csrfToken;
+  res.locals.csrf = () => { 
+    return `<input type="hidden" name="_csrf" value="${csrfToken}" />`;
+  };
+  res.locals.method = (value) => {
+    return `<input type="hidden" name="_method" value="${value}" />`;
+  };
+  next();
+});
 
 // @see http://expressjs.com/en/resources/middleware/method-override.html
 app.use(methodOverride(function (req, _res) {

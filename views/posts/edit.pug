@@ -4,7 +4,8 @@ block content
   h1 Post:edit
 
   form(action=`/posts/${post.id}`, method="post")
-    input(type="hidden", name="_method", value="patch")
+    | !{csrf()}
+    | !{method('put')}
 
     div
       input(name="title")

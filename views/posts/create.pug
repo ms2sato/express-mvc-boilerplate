@@ -4,6 +4,7 @@ block content
   h1 Post:create
 
   form(action="/posts", method="post")
+    | !{csrf()}
     div
       input(name="title")
     div  
