@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "dev": "PORT=8000 nodemon ./bin/www"
+    "dev": "PORT=8000 nodemon ./bin/www",
+    "console": "node --experimental-repl-await ./bin/console"
   },
   "dependencies": {
     "@babel/core": "^7.13.15",
