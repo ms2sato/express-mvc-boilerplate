@@ -10,11 +10,21 @@ const models = require('../app/models')
 function initContext(context) {
   debug('loading app features...')
   context.models = models
-  debug(`> "models" loaded on global`)
+  debug(`"models" loaded on global`)
   context.app = app
-  debug('> app features loaded!\n')
+  debug('app features loaded!')
 
-  replServer.displayPrompt(true)
+  // TODO: routesメソッドを作ること
+
+  const usage = `
+[usage]
+.clear\treload console
+.exit\texit
+.help\tfull help
+`
+  debug(usage);
+
+  replServer.displayPrompt(false)
 }
 
 const replServer = repl.start({useColors: true})
