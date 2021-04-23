@@ -1,0 +1,14 @@
+extends ../layout
+
+block content 
+  h1 Post:edit
+
+  form(action=`/posts/${post.id}`, method="post")
+    input(type="hidden", name="_method", value="patch")
+
+    div
+      input(name="title")
+    div  
+      textarea(name="body")
+    div
+      input(type="submit")
