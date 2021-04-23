@@ -1,18 +1,10 @@
-const fs = require('fs')
-
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var helmet = require('helmet');
-var session = require('express-session');
-var passport = require('passport');
-
 process.on('uncaughtException', function (err) {
   console.error(err)
   console.error(err.stack)
-})
+});
+
+const fs = require('fs');
+const path = require('path');
 
 const rootDir = path.join(__dirname, './')
 const envPath = path.join(rootDir, (process.env.NODE_ENV === 'test') ? '.env.test' : '.env')
@@ -25,9 +17,14 @@ if (fs.existsSync(envPath)) {
   }
 }
 
-var indexRouter = require('./routes/index');
-var authRouter = require('./routes/auth');
-var usersRouter = require('./routes/users');
+var createError = require('http-errors');
+var express = require('express');
+var cookieParser = require('cookie-parser');
+var logger = require('morgan');
+var helmet = require('helmet');
+var session = require('express-session');
+var passport = require('passport');
+var methodOverride = require('method-override')
 
 var app = express();
 app.use(helmet());
@@ -45,10 +42,24 @@ app.use(session( { secret: process.env.SESSION_SECRET, resave: false, saveUninit
 app.use(passport.initialize());
 app.use(passport.session());
 
+// @see http://expressjs.com/en/resources/middleware/method-override.html
+app.use(methodOverride(function (req, res) {
+  if (req.body && typeof req.body === 'object' && '_method' in req.body) {
+    // look in urlencoded POST bodies and delete it
+    var method = req.body._method
+    delete req.body._method
+    return method
+  }
+}));
+
+app.use(methodOverride('_method', { methods: ['GET', 'POST'] })); // for GET Paramter
+
+var indexRouter = require('./routes/index');
+var authRouter = require('./routes/auth');
+var usersRouter = require('./routes/users');
 app.use('/', indexRouter);
 app.use('/', authRouter);
 app.use('/users', ensureAuthenticated, usersRouter);
-
 
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {

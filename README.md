@@ -30,3 +30,6 @@ seedの雛形を作る
 ```
 npx sequelize-cli seed:generate --name demo-user
 ```
+
+## Routes
+resourceの解説必要
