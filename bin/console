@@ -1,18 +1,18 @@
 #!/usr/bin/env node
 
-const app = require('../app')
+const app = require('../app');
 
-const debug = require('debug')('express-mvc:console')
-const repl = require('repl')
-const fs = require('fs')
-const models = require('../app/models')
+const debug = require('debug')('express-mvc:console');
+const repl = require('repl');
+const fs = require('fs');
+const models = require('../app/models');
 
 function initContext(context) {
-  debug('loading app features...')
-  context.models = models
-  debug(`"models" loaded on global`)
-  context.app = app
-  debug('app features loaded!')
+  debug('loading app features...');
+  context.models = models;
+  debug(`"models" loaded on global`);
+  context.app = app;
+  debug('app features loaded!');
 
   // TODO: routesメソッドを作ること
 
@@ -21,26 +21,26 @@ function initContext(context) {
 .clear\treload console
 .exit\texit
 .help\tfull help
-`
+`;
   debug(usage);
 
-  replServer.displayPrompt(false)
+  replServer.displayPrompt(false);
 }
 
-const replServer = repl.start({useColors: true})
-replServer.on('reset', initContext)
-enableHistory(replServer)
+const replServer = repl.start({ useColors: true });
+replServer.on('reset', initContext);
+enableHistory(replServer);
 
-initContext(replServer.context)
+initContext(replServer.context);
 
 // @see https://qiita.com/acro5piano/items/dc62b94d7b04505a4aca
 function enableHistory(replServer) {
-  const replHistoryPath = `${process.env.HOME}/.node_repl_history`
+  const replHistoryPath = `${process.env.HOME}/.node_repl_history`;
   if (!fs.existsSync(replHistoryPath)) {
     fs.writeFile(replHistoryPath, '', (err) => {
-      if(err) { 
-        debug(err.stack)
-        throw err
+      if (err) {
+        debug(err.stack);
+        throw err;
       }
     });
   }
@@ -49,12 +49,12 @@ function enableHistory(replServer) {
     data.split('\n').forEach(command =>
       replServer.history.push(command)
     )
-  )
-  
+  );
+
   replServer.on('exit', () => {
     fs.writeFile(replHistoryPath, replServer.history.join('\n'), err => {
-      console.error(err)
+      console.error(err);
       process.exit();
-    })
-  });  
+    });
+  });
 }
