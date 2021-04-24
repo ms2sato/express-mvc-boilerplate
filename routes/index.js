@@ -12,6 +12,6 @@ route.get('/', function (req, res, _next) {
 // route.get('/posts/:id', 'posts_controller@show');
 
 // resource style
-//route.resource('posts', 'posts_controller');
+route.resource('examples', 'examples_controller');
 
 module.exports = route.router;

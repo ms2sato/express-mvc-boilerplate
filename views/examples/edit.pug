@@ -1,0 +1,15 @@
+extends ../layout
+
+block content 
+  h1 Example:edit
+
+  form(action=`/examples/${example.id}`, method="post")
+    | !{csrf()}
+    | !{method('put')}
+
+    div
+      input(name="title")
+    div  
+      textarea(name="body")
+    div
+      input(type="submit")
