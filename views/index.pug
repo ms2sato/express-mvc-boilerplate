@@ -1,7 +1,6 @@
 extends layout
 
 block content
-  h1= title
   p Welcome to #{title}
   if user 
     p Hello, #{user.username}
@@ -9,4 +8,6 @@ block content
   else 
     a(href="/login") Login  
   p 
-    a(href="/examples") CRUDのリソースのサンプル  
+    a(href="/user/edit") プロフィール編集
+  p 
+    a(href="/examples") CRUDのリソースのサンプル      
