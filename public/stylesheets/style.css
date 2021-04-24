@@ -1,8 +1,21 @@
 body {
-  padding: 50px;
+  padding: 1em 0;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 a {
   color: #00B7FF;
+}
+
+.wrapper {
+  max-width: 960px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.errors {
+  color: darkred;
+  background-color: pink;
+  list-style: none;
+  padding: 1em;
 }
