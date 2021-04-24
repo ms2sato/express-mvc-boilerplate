@@ -28,6 +28,13 @@ const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const passport = require('passport');
 const methodOverride = require('method-override');
 const csrf = require('csurf');
+const i18n = require('i18n');
+
+i18n.configure({
+  locales: ['ja', 'en'],
+  directory: path.join(__dirname, 'config', 'locales'),
+  objectNotation: true
+});
 
 const store = new SequelizeStore({ db: models.sequelize });
 store.sync();
@@ -52,12 +59,16 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(csrf());
+app.use(i18n.init);
 app.use((req, res, next) => {
   const csrfToken = req.csrfToken();
   res.locals.csrfToken = csrfToken;
   res.locals.csrf = () => { 
     return `<input type="hidden" name="_csrf" value="${csrfToken}" />`;
   };
+  next();
+});
+app.use((req, res, next) => {
   res.locals.method = (value) => {
     const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'];
     if(!methods.includes(value.toUpperCase())) {
@@ -67,6 +78,7 @@ app.use((req, res, next) => {
   };
   next();
 });
+
 
 // @see http://expressjs.com/en/resources/middleware/method-override.html
 app.use(methodOverride(function (req, _res) {
