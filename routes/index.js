@@ -15,6 +15,7 @@ route.put('/user', forceLogin, 'users_controller@update');
 
 // resource style
 route.resource('examples', 'examples_controller');
+route.resource('posts', 'posts_controller');
 
 // /adminのURL階層の作成。ログインチェック、管理者チェックが有効。
 const adminRoute = route.sub('/admin', forceLogin, forceAdmin);

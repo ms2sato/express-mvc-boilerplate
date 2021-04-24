@@ -1,0 +1,13 @@
+extends ../layout
+
+block content 
+  h1 Post:create
+
+  form(action="/posts", method="post")
+    | !{csrf()}
+    div
+      input(name="title")
+    div  
+      textarea(name="body")
+    div
+      input(type="submit")

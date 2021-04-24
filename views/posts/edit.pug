@@ -1,0 +1,15 @@
+extends ../layout
+
+block content 
+  h1 Post:edit
+
+  form(action=`/posts/${post.id}`, method="post")
+    | !{csrf()}
+    | !{method('put')}
+
+    div
+      input(name="title")
+    div  
+      textarea(name="body")
+    div
+      input(type="submit")
