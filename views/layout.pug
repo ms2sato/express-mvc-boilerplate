@@ -5,4 +5,8 @@ html
     meta(name="csrf-token", content!=csrfToken)
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
-    block content
+    .wrapper
+      h1 
+        a(href="/") ExpressMVC
+
+      block content

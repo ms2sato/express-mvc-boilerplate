@@ -1,0 +1,19 @@
+extends ../layout
+
+block content 
+  h2 プロフィール
+
+  form(action=`/user`, method="post")
+    | !{csrf()}
+    | !{method('put')}
+
+    - if(errors)
+      ul.errors
+        each error in errors
+          li= error.message
+
+    div
+      input(name="displayName", value!=user.displayName)
+
+    div
+      input(type="submit")
