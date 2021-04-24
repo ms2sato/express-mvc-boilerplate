@@ -16,6 +16,7 @@ class UsersController extends Controller {
     try {
       user.displayName = req.body.displayName;  
       await user.save();
+      await req.flash('info', '更新しました');
       res.redirect(`/user/edit`);
     } catch (err) {
       res.render('users/edit', { user, errors: err.errors });

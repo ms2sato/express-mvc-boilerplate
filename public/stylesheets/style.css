@@ -19,3 +19,18 @@ a {
   list-style: none;
   padding: 1em;
 }
+
+.flash-message {
+  padding: .5em;
+  font-weight: bold;
+}
+
+.flash-message.info-message {
+  color: darkgreen;
+  background-color: lightgreen;
+}
+
+.flash-message.alert-message {
+  color: darkred;
+  background-color: pink;
+}

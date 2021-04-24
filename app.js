@@ -29,6 +29,7 @@ const passport = require('passport');
 const methodOverride = require('method-override');
 const csrf = require('csurf');
 const i18n = require('i18n');
+const { flash } = require('express-flash-message');
 
 i18n.configure({
   locales: ['ja', 'en'],
@@ -60,6 +61,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(csrf());
 app.use(i18n.init);
+
 app.use((req, res, next) => {
   const csrfToken = req.csrfToken();
   res.locals.csrfToken = csrfToken;
@@ -68,6 +70,7 @@ app.use((req, res, next) => {
   };
   next();
 });
+
 app.use((req, res, next) => {
   res.locals.method = (value) => {
     const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'];
@@ -79,7 +82,6 @@ app.use((req, res, next) => {
   next();
 });
 
-
 // @see http://expressjs.com/en/resources/middleware/method-override.html
 app.use(methodOverride(function (req, _res) {
   if (req.body && typeof req.body === 'object' && '_method' in req.body) {
@@ -90,7 +92,17 @@ app.use(methodOverride(function (req, _res) {
   }
 }));
 
-app.use(methodOverride('_method', { methods: ['GET', 'POST'] })); // for GET Paramter
+app.use(methodOverride('_method', { methods: ['GET', 'POST'] })); // for GET Parameter
+
+app.use(flash({ sessionKeyName: '_flashMessage' }));
+app.use(async (req, res, next) => {
+  res.locals.flashMessages = {
+    info: await req.consumeFlash('info'),
+    alert: await req.consumeFlash('alert')
+  };
+  next();
+});
+
 
 const indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
