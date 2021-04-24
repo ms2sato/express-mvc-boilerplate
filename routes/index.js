@@ -8,8 +8,8 @@ route.get('/', function (req, res, _next) {
 });
 
 // single style
-// route.get('/posts', 'posts_controller@index');
-// route.get('/posts/:id', 'posts_controller@show');
+route.get('/user/edit', 'users_controller@edit');
+route.put('/user', 'users_controller@update');
 
 // resource style
 route.resource('examples', 'examples_controller');

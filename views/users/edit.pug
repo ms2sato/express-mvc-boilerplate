@@ -1,0 +1,14 @@
+extends ../layout
+
+block content 
+  h1 プロフィール
+
+  form(action=`/user`, method="post")
+    | !{csrf()}
+    | !{method('put')}
+
+    div
+      input(name="displayName", value!=user.displayName)
+
+    div
+      input(type="submit")

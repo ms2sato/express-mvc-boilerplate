@@ -27,13 +27,46 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   User.init({
-    provider: DataTypes.STRING,
-    uid: DataTypes.STRING,
-    username: DataTypes.STRING,
-    email: DataTypes.STRING,
-    displayName: DataTypes.STRING,
-    accessToken: DataTypes.TEXT,
-    refreshToken: DataTypes.TEXT,
+    provider: {
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: true
+      }
+    },
+    uid: {
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: true
+      }
+    },
+    username: {
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: true
+      }
+    },
+    email:  {
+      type: DataTypes.STRING,
+      validate: {
+        isEmail: true,
+        notEmpty: true
+      }
+    },
+    displayName:  {
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: true
+      }
+    },
+    accessToken:  {
+      type: DataTypes.TEXT,
+      validate: {
+        notEmpty: true
+      }
+    },
+    refreshToken:  {
+      type: DataTypes.TEXT
+    },
   }, {
     sequelize,
     modelName: 'User',

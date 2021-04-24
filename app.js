@@ -85,7 +85,7 @@ const authRouter = require('./routes/auth');
 const usersRouter = require('./routes/users');
 app.use('/', indexRouter);
 app.use('/', authRouter);
-app.use('/users', ensureAuthenticated, usersRouter);
+//app.use('/users', ensureAuthenticated, usersRouter);
 
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
