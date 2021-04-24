@@ -50,6 +50,10 @@ app.use((req, res, next) => {
     return `<input type="hidden" name="_csrf" value="${csrfToken}" />`;
   };
   res.locals.method = (value) => {
+    const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'];
+    if(!methods.includes(value.toUpperCase())) {
+      throw new Error(`指定できるのはHTTPメソッド(${methods.join(',')})です: ${value}`);
+    }
     return `<input type="hidden" name="_method" value="${value}" />`;
   };
   next();
