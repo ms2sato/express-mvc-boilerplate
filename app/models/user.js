@@ -55,7 +55,8 @@ module.exports = (sequelize, DataTypes) => {
     displayName:  {
       type: DataTypes.STRING,
       validate: {
-        notEmpty: true
+        notEmpty: true,
+        len: [1, 24]
       }
     },
     accessToken:  {

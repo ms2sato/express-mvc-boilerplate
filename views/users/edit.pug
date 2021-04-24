@@ -7,6 +7,11 @@ block content
     | !{csrf()}
     | !{method('put')}
 
+    - if(errors)
+      ul.errors
+        each error in errors
+          li= error.message
+
     div
       input(name="displayName", value!=user.displayName)
 
