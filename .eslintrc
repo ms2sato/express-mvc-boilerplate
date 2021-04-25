@@ -1,12 +1,18 @@
 {
-  "extends": "eslint:recommended",
+  "extends": [
+    "eslint:recommended",
+    "plugin:jest/recommended",
+    "plugin:jest/style"
+  ],
   "env": {
     "browser": true,
     "node": true,
-    "es6": true
+    "es6": true,
+    "jest/globals": true
   },
   "plugins": [
-    "pug"
+    "pug",
+    "jest"
   ],
   "parserOptions": {
     "ecmaVersion": 2018

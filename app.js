@@ -133,17 +133,8 @@ app.use(async (req, res, next) => {
 
 const indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
-const usersRouter = require('./routes/users');
 app.use('/', indexRouter);
 app.use('/', authRouter);
-//app.use('/users', ensureAuthenticated, usersRouter);
-
-function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  res.redirect('/login');
-}
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
