@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const app = require('../app');
+const displayRoutes = require('express-routemap');
 
 const debug = require('debug')('express-mvc:console');
 const repl = require('repl');
@@ -17,10 +18,7 @@ function initContext(context) {
   // TODO: routesメソッドを作ること
 
   const usage = `
-[usage]
-.clear\treload console
-.exit\texit
-.help\tfull help
+.help commands for show command help
 `;
   debug(usage);
 
@@ -28,6 +26,15 @@ function initContext(context) {
 }
 
 const replServer = repl.start({ useColors: true });
+replServer.defineCommand('routes', {
+  help: 'Display routes',
+  action() {
+    this.clearBufferedCommand();
+    displayRoutes(app);
+    this.displayPrompt();
+  }
+});
+
 replServer.on('reset', initContext);
 enableHistory(replServer);
 

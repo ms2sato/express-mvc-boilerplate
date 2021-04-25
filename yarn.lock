@@ -1438,6 +1438,13 @@ cli-color@^1.4.0:
     memoizee "^0.4.14"
     timers-ext "^0.1.5"
 
+cli-table@^0.3.1:
+  version "0.3.6"
+  resolved "https://registry.yarnpkg.com/cli-table/-/cli-table-0.3.6.tgz#e9d6aa859c7fe636981fd3787378c2a20bce92fc"
+  integrity sha512-ZkNZbnZjKERTY5NwC2SeMeLeifSPq/pubeRoTpdr3WchLlnZg6hEgvHkK5zL7KNFdd9PmHN8lxrENUwI3cE8vQ==
+  dependencies:
+    colors "1.0.3"
+
 cliui@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/cliui/-/cliui-5.0.0.tgz#deefcfdb2e800784aa34f46fa08e06851c7bbbc5"
@@ -1509,6 +1516,11 @@ colorette@^1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/colorette/-/colorette-1.2.2.tgz#cbcc79d5e99caea2dbf10eb3a26fd8b3e6acfa94"
   integrity sha512-MKGMzyfeuutC/ZJ1cba9NqcNpfeqMUcYmyF1ZFY6/Cn7CNSAKx6a+s48sqLqyAiZuaP2TcqMhoo+dlwFnVxT9w==
+
+colors@1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/colors/-/colors-1.0.3.tgz#0433f44d809680fdeb60ed260f1b0c262e82a40b"
+  integrity sha1-BDP0TYCWgP3rYO0mDxsMJi6CpAs=
 
 combined-stream@^1.0.6, combined-stream@^1.0.8, combined-stream@~1.0.6:
   version "1.0.8"
@@ -2372,6 +2384,20 @@ express-flash-message@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/express-flash-message/-/express-flash-message-2.1.0.tgz#c41de9508cb72772f5adcfa45ed79ef5e3fb0ad3"
   integrity sha512-oR/cwzt7CfjSUt7XwEZCCyOegylHuTF8/by6+jAshZh2TzREqDIjfU0JU5M6usurSk/ep3lUxxyaCbujyERyTQ==
+
+express-list-endpoints@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/express-list-endpoints/-/express-list-endpoints-4.0.1.tgz#f83ec9de4df21b904cfba523bc913aee4c17e9db"
+  integrity sha512-KjY7frYk72/Jwk2VgqyvuXlTPslEkWkzjUXPUMCUguVmAWqd6fh60VHr+sEfqJgMAOE3hKhUjm/7tLASVaE2Qg==
+
+express-routemap@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/express-routemap/-/express-routemap-1.6.0.tgz#cf7acc8e2110cc00f5f91dc6a10b60bf97ebd68e"
+  integrity sha512-VqPt3BWfEdxgPC1aasvtGD4lBEDXTheNgb1mS6ugMSRpLAPBgxNfjqODlK7X6q9FbAtjRTpwi1SBbV6n97EgPg==
+  dependencies:
+    chalk "^3.0.0"
+    cli-table "^0.3.1"
+    express-list-endpoints "^4.0.1"
 
 express-session@1.15.6:
   version "1.15.6"
