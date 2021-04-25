@@ -4,8 +4,8 @@ block content
   h1 Example:edit
 
   form(action=`/examples/${example.id}`, method="post")
-    | !{csrf()}
-    | !{method('put')}
+    _csrf
+    _method('put')
 
     div
       input(name="title")

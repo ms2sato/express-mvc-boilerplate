@@ -4,7 +4,8 @@ block content
   h1 Example:create
 
   form(action="/examples", method="post")
-    | !{csrf()}
+    _csrf
+    
     div
       input(name="title")
     div  

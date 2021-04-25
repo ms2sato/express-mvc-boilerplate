@@ -40,47 +40,67 @@ i18n.configure({
 const store = new SequelizeStore({ db: models.sequelize });
 store.sync();
 
+const overridableMethods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'];
+
 const app = express();
 app.use(helmet());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
+const walk = require('pug-walk');
+app.use((req, res, next) => {
+  res.locals.plugins = [
+    {
+      preCodeGen: (ast, _options) => {
+        return walk(ast, null, (node, replace) => {
+          if (node.name === '_method') {
+            if (node.attrs.length !== 1) {
+              throw new Error('method() の引数は一つだけです。');
+            }
+            const method = node.attrs[0].name;
+            if (!overridableMethods.includes(method.toUpperCase())) {
+              throw new Error(`methodの引数は${overridableMethods.join(',')}のうちの一つです`);
+            }
+
+            replace({
+              ...node, type: 'Tag', name: 'input', attrs: [
+                { name: 'type', val: '"hidden"', mustEscape: true },
+                { name: 'name', val: '"_method"', mustEscape: true },
+                { name: 'value', val: `"${method}"`, mustEscape: true }
+              ]
+            });
+          }
+
+          if (node.name === '_csrf') {
+            replace({
+              ...node, type: 'Tag', name: 'input', attrs: [
+                { name: 'type', val: '"hidden"', mustEscape: true },
+                { name: 'name', val: '"_csrf"', mustEscape: true },
+                { name: 'value', val: 'csrfToken', mustEscape: false }
+              ]
+            });
+          }
+        });
+      },
+    },
+  ];
+  next();
+});
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(session({ 
-  secret: process.env.SESSION_SECRET, 
+app.use(session({
+  secret: process.env.SESSION_SECRET,
   store: store,
   resave: false,
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(csrf());
 app.use(i18n.init);
-
-app.use((req, res, next) => {
-  const csrfToken = req.csrfToken();
-  res.locals.csrfToken = csrfToken;
-  res.locals.csrf = () => { 
-    return `<input type="hidden" name="_csrf" value="${csrfToken}" />`;
-  };
-  next();
-});
-
-app.use((req, res, next) => {
-  res.locals.method = (value) => {
-    const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'];
-    if(!methods.includes(value.toUpperCase())) {
-      throw new Error(`指定できるのはHTTPメソッド(${methods.join(',')})です: ${value}`);
-    }
-    return `<input type="hidden" name="_method" value="${value}" />`;
-  };
-  next();
-});
 
 // @see http://expressjs.com/en/resources/middleware/method-override.html
 app.use(methodOverride(function (req, _res) {
@@ -93,6 +113,13 @@ app.use(methodOverride(function (req, _res) {
 }));
 
 app.use(methodOverride('_method', { methods: ['GET', 'POST'] })); // for GET Parameter
+
+app.use(csrf());
+app.use((req, res, next) => {
+  const csrfToken = req.csrfToken();
+  res.locals.csrfToken = csrfToken;
+  next();
+});
 
 app.use(flash({ sessionKeyName: '_flashMessage' }));
 app.use(async (req, res, next) => {
