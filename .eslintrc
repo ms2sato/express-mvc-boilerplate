@@ -15,7 +15,7 @@
     "jest"
   ],
   "parserOptions": {
-    "ecmaVersion": 2018
+    "ecmaVersion": 2018 // for spread syntax
   },
   "rules": {
     "indent": ["error", 2],
