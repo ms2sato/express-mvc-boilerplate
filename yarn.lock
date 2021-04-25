@@ -1330,6 +1330,11 @@ event-emitter@^0.3.5:
     d "1"
     es5-ext "~0.10.14"
 
+express-flash-message@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/express-flash-message/-/express-flash-message-2.1.0.tgz#c41de9508cb72772f5adcfa45ed79ef5e3fb0ad3"
+  integrity sha512-oR/cwzt7CfjSUt7XwEZCCyOegylHuTF8/by6+jAshZh2TzREqDIjfU0JU5M6usurSk/ep3lUxxyaCbujyERyTQ==
+
 express-session@1.15.6:
   version "1.15.6"
   resolved "https://registry.yarnpkg.com/express-session/-/express-session-1.15.6.tgz#47b4160c88f42ab70fe8a508e31cbff76757ab0a"

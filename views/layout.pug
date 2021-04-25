@@ -9,4 +9,12 @@ html
       h1 
         a(href="/")= __('AppTitle')
 
+      if flashMessages 
+        if flashMessages.info.length > 0
+          each msg in flashMessages.info
+            .flash-message.info-message= msg
+        if flashMessages.alert.length > 0
+          each msg in flashMessages.alert
+            .flash-message.alert-message= msg
+
       block content
