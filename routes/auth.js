@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
 const GitHubStrategy = require('passport-github2').Strategy;
 
 const models = require('../app/models');
@@ -17,12 +18,34 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser(async (userId, done) => {
   const user = await models.User.findByPk(userId);
-  if(!user) {
+  if (!user) {
     return done(new Error('session data error'), null);
   }
 
   done(null, user);
 });
+
+if (process.env.NODE_ENV !== 'production') {
+  passport.use(new LocalStrategy(
+    async (username, password, done) => {
+      // [caution!] あくまでダミーユーザー用なのでパスワードチェックはしない
+      const user = await models.User.findOne({ username: username });
+      console.log(user);
+      if (!user) {
+        return done(null, false, { message: 'Incorrect username.' });
+      }
+      return done(null, user);
+    }
+  ));
+
+  router.post('/login',
+    passport.authenticate('local', {
+      successRedirect: '/',
+      failureRedirect: '/login',
+      failureFlash: true
+    })
+  );
+}
 
 passport.use(new GitHubStrategy(gitHubConfig, async (accessToken, refreshToken, profile, done) => {
   const user = await models.User.signIn({
@@ -31,7 +54,7 @@ passport.use(new GitHubStrategy(gitHubConfig, async (accessToken, refreshToken, 
     username: profile.username,
     displayName: profile.displayName || profile.username,
     email: profile.emails[0].value,
-    accessToken, 
+    accessToken,
     refreshToken
   });
   done(null, user);
