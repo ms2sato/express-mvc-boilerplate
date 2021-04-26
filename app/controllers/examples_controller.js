@@ -1,4 +1,4 @@
-const debug = require('debug')('express-mvc:examples_controller');
+const debug = require('../../lib/logger').extend('examples_controller');
 
 const Controller = require('./controller');
 
