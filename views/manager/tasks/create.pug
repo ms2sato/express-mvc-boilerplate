@@ -1,0 +1,14 @@
+extends ../../layout
+
+block content 
+  h1 task:create
+
+  form(action="/manager/tasks", method="post")
+    _csrf
+    
+    div
+      input(name="title")
+    div  
+      textarea(name="body")
+    div
+      input(type="submit")

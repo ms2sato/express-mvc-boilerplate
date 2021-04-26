@@ -1,0 +1,17 @@
+extends ../../layout
+
+block content 
+  h1 member:index
+
+  //- a(href="/manager/members/create") 新規作成
+
+  table 
+    tbody 
+      each member in members
+        tr
+          td= member.id
+          td= member.title
+          td
+            //- a(href=`/manager/members/${member.id}`) 詳細
+            //- a(href=`/manager/members/${member.id}/edit`) 編集
+            //- a(href=`/manager/members/${member.id}?_method=delete`) 削除

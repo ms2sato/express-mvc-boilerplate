@@ -1,0 +1,14 @@
+extends ../../layout
+
+block content 
+  h1 team:create
+
+  form(action="/manager/teams", method="post")
+    _csrf
+    
+    div
+      input(name="title")
+    div  
+      textarea(name="body")
+    div
+      input(type="submit")

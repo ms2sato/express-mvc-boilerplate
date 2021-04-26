@@ -20,4 +20,14 @@ route.resource('examples', 'examples_controller');
 const adminRoute = route.sub('/admin', forceLogin, forceAdmin);
 adminRoute.resource('users', 'admin/users_controller');
 
+{
+  // for manager
+  const managerRoute = route.sub('/manager', forceLogin);  
+  managerRoute.resource('teams', 'manager/teams_controller');
+  
+  const teamRoute = managerRoute.sub('/teams/:team');  
+  teamRoute.resource('tasks', 'manager/tasks_controller');
+  teamRoute.resource('members', { controller: 'manager/members_controller', only: ['index', 'store', 'destroy'] });
+}
+
 module.exports = route.router;

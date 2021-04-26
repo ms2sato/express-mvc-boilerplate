@@ -1,0 +1,15 @@
+extends ../../layout
+
+block content 
+  h1 task:edit
+
+  form(action=`/manager/tasks/${task.id}`, method="post")
+    _csrf
+    _method('put')
+
+    div
+      input(name="title")
+    div  
+      textarea(name="body")
+    div
+      input(type="submit")

@@ -1,0 +1,15 @@
+extends ../../layout
+
+block content 
+  h1 team:edit
+
+  form(action=`/manager/teams/${team.id}`, method="post")
+    _csrf
+    _method('put')
+
+    div
+      input(name="title")
+    div  
+      textarea(name="body")
+    div
+      input(type="submit")

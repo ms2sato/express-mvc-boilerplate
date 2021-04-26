@@ -1,0 +1,17 @@
+extends ../../layout
+
+block content 
+  h1 team:index
+
+  a(href="/manager/teams/create") 新規作成
+
+  table 
+    tbody 
+      each team in teams
+        tr
+          td= team.id
+          td= team.title
+          td
+            a(href=`/manager/teams/${team.id}`) 詳細
+            a(href=`/manager/teams/${team.id}/edit`) 編集
+            a(href=`/manager/teams/${team.id}?_method=delete`) 削除

@@ -1,0 +1,17 @@
+extends ../../layout
+
+block content 
+  h1 task:index
+
+  a(href="/manager/tasks/create") 新規作成
+
+  table 
+    tbody 
+      each task in tasks
+        tr
+          td= task.id
+          td= task.title
+          td
+            a(href=`/manager/tasks/${task.id}`) 詳細
+            a(href=`/manager/tasks/${task.id}/edit`) 編集
+            a(href=`/manager/tasks/${task.id}?_method=delete`) 削除
