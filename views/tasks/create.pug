@@ -1,9 +1,9 @@
-extends ../../layout
+extends ../layout
 
 block content 
-  h1 task:create
+  h1 Example:create
 
-  form(action="/manager/tasks", method="post")
+  form(action="/tasks", method="post")
     _csrf
     
     div

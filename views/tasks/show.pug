@@ -1,0 +1,36 @@
+extends ../layout
+
+block content 
+  h1 
+    span=team.name
+    span &nbsp;/&nbsp;
+    span=task.title
+
+  div
+    p マネージャ専用
+    a(href=`/tasks/${task.id}/edit`) 編集
+    a(href=`/tasks/${task.id}?_method=delete`) 削除  
+
+    p 作業者専用
+    form(action=`/tasks/${task.id}`, method="post")
+      _csrf
+      _method('put')
+
+      p 報告
+      textarea(name="finish_message", cols="30", rows="5") 
+      input(type="submit", value="完了")
+
+  dl
+    dt title
+    dd= task.title
+    dt body
+    dd= task.body
+
+  h2 コメント
+
+  form(action=`/tasks/${task.id}/comments`, method="post")
+    _csrf
+
+    p コメント
+    textarea(name="message", cols="30", rows="5") 
+    input(type="submit", value="送信")

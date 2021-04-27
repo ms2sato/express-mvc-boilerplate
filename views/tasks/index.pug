@@ -1,0 +1,15 @@
+extends ../layout
+
+block content 
+  h1 Example:index
+
+  a(href="/tasks/create") 新規作成
+
+  table 
+    tbody 
+      each task in tasks
+        tr
+          td= task.id
+          td= task.title
+          td
+            a(href=`/tasks/${task.id}`) 詳細

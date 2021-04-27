@@ -26,8 +26,16 @@ adminRoute.resource('users', 'admin/users_controller');
   managerRoute.resource('teams', 'manager/teams_controller');
   
   const teamRoute = managerRoute.sub('/teams/:team');  
-  teamRoute.resource('tasks', 'manager/tasks_controller');
+  teamRoute.post('/tasks', 'manager/tasks_controller@store');
   teamRoute.resource('members', { controller: 'manager/members_controller', only: ['index', 'store', 'destroy'] });
+}
+
+{
+  route.resource('tasks', { controller: 'tasks_controller', only: ['index', 'show', 'edit', 'update', 'destroy'] });
+  route.put('task/:task', 'tasks_controller@finish');
+
+  const taskRoute = route.sub('/tasks/:task');
+  taskRoute.resource('comments', { controller: 'comments_controller', only: ['store', 'update', 'destroy'] });
 }
 
 module.exports = route.router;
