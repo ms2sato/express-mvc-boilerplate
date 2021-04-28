@@ -32,7 +32,7 @@ adminRoute.resource('users', 'admin/users_controller');
 
 {
   route.resource('tasks', { controller: 'tasks_controller', only: ['index', 'show', 'edit', 'update', 'destroy'] });
-  route.put('task/:task', 'tasks_controller@finish');
+  route.put('tasks/:task', 'tasks_controller@finish');
 
   const taskRoute = route.sub('/tasks/:task');
   taskRoute.resource('comments', { controller: 'comments_controller', only: ['store', 'update', 'destroy'] });
