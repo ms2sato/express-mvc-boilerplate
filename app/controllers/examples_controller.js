@@ -10,39 +10,39 @@ const examples = [
 
 class ExamplesController extends Controller {
   // GET /
-  index(req, res) {
+  async index(req, res) {
     debug(req.params);
     res.render('examples/index', { examples: examples });
   }
 
   // GET /create
-  create(req, res) {
+  async create(req, res) {
     debug(req.params);
     res.render('examples/create', { example: { title: '', body: '' } });
   }
 
   // POST /
-  store(req, res) {
+  async store(req, res) {
     // TODO: 新規作成
     res.redirect('/examples/');
   }
 
   // GET /:id
-  show(req, res) {
+  async show(req, res) {
     debug(req.params);
     const example = examples[req.params.example - 1];
     res.render('examples/show', { example });
   }
 
   // GET /:id/edit
-  edit(req, res) {
+  async edit(req, res) {
     debug(req.params);
     const example = examples[req.params.example - 1];
     res.render('examples/edit', { example });
   }
 
   // PUT or PATCH /:id
-  update(req, res) {
+  async update(req, res) {
     debug(req.params);
     //const post = examples[req.params.post - 1];
     // TODO: 編集
@@ -50,7 +50,7 @@ class ExamplesController extends Controller {
   }
 
   // DELETE /:id
-  destroy(req, res) {
+  async destroy(req, res) {
     debug(req.params);
     // TODO: 削除
     res.redirect('/examples/');
