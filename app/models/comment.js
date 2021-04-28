@@ -10,18 +10,18 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      this.User = this.belongsTo(models.User, {
-        foreignKey: 'createdBy'
+      this.Task = this.belongsTo(models.Task, {
+        foreignKey: 'taskId',
+        as: 'task'
       });
 
-      this.Task = this.belongsTo(models.Task, {
-        foreignKey: 'taskId'
+      this.Creator = this.belongsTo(models.User, {
+        foreignKey: 'creatorId',
+        as: 'creator'
       });
     }
   }
   Comment.init({
-    taskId: DataTypes.INTEGER,
-    createdBy: DataTypes.INTEGER,
     message: DataTypes.TEXT,
     kind: DataTypes.INTEGER
   }, {

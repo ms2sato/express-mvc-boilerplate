@@ -11,7 +11,7 @@ module.exports = {
       taskId: {
         type: Sequelize.INTEGER
       },
-      createdBy: {
+      creatorId: {
         type: Sequelize.INTEGER
       },
       message: {
@@ -30,7 +30,7 @@ module.exports = {
       }
     });
   },
-  down: async (queryInterface, Sequelize) => {
+  down: async (queryInterface, _Sequelize) => {
     await queryInterface.dropTable('Comments');
   }
 };

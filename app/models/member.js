@@ -20,8 +20,6 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Member.init({
-    teamId: DataTypes.INTEGER,
-    userId: DataTypes.INTEGER,
     role: DataTypes.INTEGER
   }, {
     sequelize,

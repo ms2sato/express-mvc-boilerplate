@@ -11,12 +11,18 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       this.AssignedTasks = this.hasMany(models.Task, {
-        foreignKey: 'assignee'
+        foreignKey: 'assigneeId',
+        as: 'assignedTasks'
       });
 
       this.Teams = this.belongsToMany(models.Team, {
         through: 'Member',
         foreignKey: 'teamId'
+      });
+
+      this.OwnTeams = this.hasMany(models.Team, {
+        foreignKey: 'ownerId',
+        as: 'ownTeams'
       });
     }
 
