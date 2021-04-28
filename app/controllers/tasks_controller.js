@@ -1,6 +1,7 @@
 const debug = require('../../lib/logger').extend('tasks_controller');
 
 const Controller = require('./controller');
+const models = require('../models');
 
 let index = 1;
 const tasks = [
@@ -16,23 +17,29 @@ class TasksController extends Controller {
   }
 
   // GET /create
-  create(req, res) {
-    debug(req.params);
-    res.render('tasks/create', { task: { title: '', body: '' } });
-  }
+  // create(req, res) {
+  //   debug(req.params);
+  //   res.render('tasks/create', { task: { title: '', body: '' } });
+  // }
 
   // POST /
-  store(req, res) {
-    // TODO: 新規作成
-    res.redirect('/tasks/');
-  }
+  // store(req, res) {
+  //   // TODO: 新規作成
+  //   res.redirect('/tasks/');
+  // }
 
   // GET /:id
-  show(req, res) {
+  async show(req, res) {
     debug(req.params);
-    const task = tasks[req.params.task - 1];
-    const team = { id: 1, name: 'チーム1' };
-    res.render('tasks/show', { task, team });
+    const task = await models.Task.findByPk(req.params.task);
+    if(!task) {
+      throw new Error('task not found');
+    }
+
+    const team = await task.getTeam();
+    const comments = await models.Comment.findAll({ where: { taskId: task.id }, include: 'User' });
+    
+    res.render('tasks/show', { task, team, comments });
   }
 
   // GET /:id/edit

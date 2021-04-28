@@ -34,3 +34,11 @@ block content
     p コメント
     textarea(name="message", cols="30", rows="5") 
     input(type="submit", value="送信")
+
+  ul
+    //- コメント欄を出すのが一番大変そう。user情報は最初はIDだけ出れば許して良い
+    each comment in comments
+      li
+        div= comment.message
+        div= comment.User.displayName
+        div= comment.createdAt
