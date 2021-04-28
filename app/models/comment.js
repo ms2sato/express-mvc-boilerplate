@@ -28,5 +28,7 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Comment',
   });
+
+  Comment.statuses = { normal: 0, finished: 1 };
   return Comment;
 };

@@ -1,60 +1,57 @@
-const debug = require('../../lib/logger').extend('examples_controller');
+const debug = require('../../lib/logger').extend('comments_controller');
 
 const Controller = require('./controller');
+const models = require('../models');
 
 let index = 1;
-const examples = [
+const comments = [
   { id: index++, title: 'テスト1', body: 'テスト1' },
   { id: index++, title: 'テスト2', body: 'テスト2' },
 ];
 
-class ExamplesController extends Controller {
-  // GET /
-  index(req, res) {
-    debug(req.params);
-    res.render('examples/index', { examples: examples });
-  }
-
-  // GET /create
-  create(req, res) {
-    debug(req.params);
-    res.render('examples/create', { example: { title: '', body: '' } });
-  }
-
+class CommentsController extends Controller {
   // POST /
-  store(req, res) {
-    // TODO: 新規作成
-    res.redirect('/examples/');
-  }
-
-  // GET /:id
-  show(req, res) {
+  async store(req, res) {
     debug(req.params);
-    const example = examples[req.params.example - 1];
-    res.render('examples/show', { example });
+    debug(req.body);
+
+    // TODO: ログインしていなければ投稿できない？
+    const task = await models.Task.findByPk(req.params.task);
+    if(!task) {
+      throw new Error('task not found');
+    }
+
+    // TODO: もっと良い書き方はありそう
+    const comment = models.Comment.build(req.body);
+    comment.taskId = task.id;
+    comment.creatorId = req.user.id;
+    comment.status = models.Comment.statuses.normal;
+    await comment.save( { fields: ['status', 'message', 'taskId', 'creatorId'] });
+    
+    res.redirect(`/tasks/${task.id}`);
   }
 
   // GET /:id/edit
   edit(req, res) {
     debug(req.params);
-    const example = examples[req.params.example - 1];
-    res.render('examples/edit', { example });
+    const comment = comments[req.params.comment - 1];
+    res.render('comments/edit', { comment });
   }
 
   // PUT or PATCH /:id
   update(req, res) {
     debug(req.params);
-    //const post = examples[req.params.post - 1];
+    //const post = comments[req.params.post - 1];
     // TODO: 編集
-    res.redirect(`/examples/${req.params.example}`);
+    res.redirect(`/comments/${req.params.comment}`);
   }
 
   // DELETE /:id
   destroy(req, res) {
     debug(req.params);
     // TODO: 削除
-    res.redirect('/examples/');
+    res.redirect('/comments/');
   }
 }
 
-module.exports = ExamplesController;
+module.exports = CommentsController;

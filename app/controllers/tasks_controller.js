@@ -37,7 +37,7 @@ class TasksController extends Controller {
     }
 
     const team = await task.getTeam();
-    const comments = await models.Comment.findAll({ where: { taskId: task.id }, include: 'User' });
+    const comments = await models.Comment.findAll({ where: { taskId: task.id }, include: 'creator' });
     
     res.render('tasks/show', { task, team, comments });
   }
