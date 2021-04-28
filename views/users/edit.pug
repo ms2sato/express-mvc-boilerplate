@@ -8,9 +8,9 @@ block content
     _method('put')
     _csrf
 
-    - if(errors)
+    - if(err)
       ul.errors
-        each error in errors
+        each error in err.errors
           li= error.message
 
     div

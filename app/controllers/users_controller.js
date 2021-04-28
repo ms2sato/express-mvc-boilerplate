@@ -1,5 +1,6 @@
 const debug = require('../../lib/logger').extend('users_controller');
 
+const { ValidationError } = require('sequelize');
 const Controller = require('./controller');
 
 class UsersController extends Controller {
@@ -11,7 +12,6 @@ class UsersController extends Controller {
 
   async update(req, res) {
     debug(req.body);
-
     const user = req.user;
     try {
       user.displayName = req.body.displayName;  
@@ -19,7 +19,11 @@ class UsersController extends Controller {
       await req.flash('info', '更新しました');
       res.redirect(`/user/edit`);
     } catch (err) {
-      res.render('users/edit', { user, errors: err.errors });
+      if(err instanceof ValidationError) {
+        res.render('users/edit', { user, err: err });
+      } else{
+        throw err;
+      }
     }
   }
 }
