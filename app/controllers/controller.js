@@ -1,4 +1,4 @@
-const BaseController = require('../../lib/base_controller');
+const { BaseController } = require('../../lib/route');
 
 class Controller extends BaseController {
 
