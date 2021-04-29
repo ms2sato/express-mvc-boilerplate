@@ -22,11 +22,15 @@ module.exports = (sequelize, DataTypes) => {
         through: 'Member',
         foreignKey: 'teamId'
       });
+
+      this.Owner = this.belongsTo(models.User, {
+        foreignKey: 'ownerId',
+        as: 'owner'
+      });
     }
   }
   Team.init({
     name: DataTypes.STRING,
-    ownerId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Team',

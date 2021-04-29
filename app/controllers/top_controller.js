@@ -1,7 +1,7 @@
 const Controller = require('./controller');
 const models = require('../models');
 
-class DashboardController extends Controller {
+class TopController extends Controller {
   // GET /
   async index(req, res) {
     if(req.isAuthenticated()) {
@@ -15,4 +15,4 @@ class DashboardController extends Controller {
 
 }
 
-module.exports = DashboardController;
+module.exports = TopController;

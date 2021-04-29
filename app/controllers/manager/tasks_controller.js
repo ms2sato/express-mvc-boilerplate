@@ -1,53 +1,39 @@
 const Controller = require('../controller');
 const models = require('../../models');
+const { ValidationError } = require('sequelize');
 
 class TasksController extends Controller {
-  // // GET /
-  // index(req, res) {
-  //   debug(req.params);
-  //   res.render('manager/tasks/index', { tasks: tasks });
-  // }
-
-  // // GET /create
-  // create(req, res) {
-  //   debug(req.params);
-  //   res.render('manager/tasks/create', { task: { title: '', body: '' } });
-  // }
-
-  // POST /
-  store(req, res) {
-    // TODO: 新規作成
-    res.redirect(`/tasks/${tasks[0].id}`);
+  // GET /create
+  async create(req, res) {
+    const team = await this._team(req);
+    const task = models.Task.build();
+    res.render('manager/tasks/create', { team, task });
   }
 
-  // // GET /:id
-  // show(req, res) {
-  //   debug(req.params);
-  //   const task = tasks[req.params.task - 1];
-  //   res.render('manager/tasks/show', { task });
-  // }
+  // POST /
+  async store(req, res) {
+    const team = await this._team(req);
+    const task = models.Task.build({ ...req.body, teamId: team.id, creatorId: req.user.id });    
+    try {
+      await task.save({ fields: ['title', 'body', 'assigneeId', 'teamId', 'status', 'creatorId'] });
+      await req.flash('info', '新規タスクを作成しました');
+      res.redirect(`/manager/teams/${team.id}`);
+    } catch (err) {
+      if (err instanceof ValidationError) {
+        res.render('manager/tasks/create', { team, task, err: err });
+      } else {
+        throw err;
+      }
+    }
+  }
 
-  // // GET /:id/edit
-  // edit(req, res) {
-  //   debug(req.params);
-  //   const task = tasks[req.params.task - 1];
-  //   res.render('manager/tasks/edit', { task });
-  // }
-
-  // // PUT or PATCH /:id
-  // update(req, res) {
-  //   debug(req.params);
-  //   //const post = tasks[req.params.post - 1];
-  //   // TODO: 編集
-  //   res.redirect(`/manager/tasks/${req.params.task}`);
-  // }
-
-  // // DELETE /:id
-  // destroy(req, res) {
-  //   debug(req.params);
-  //   // TODO: 削除
-  //   res.redirect('/manager/tasks/');
-  // }
+  async _team(req) {
+    const team = await models.Team.findByPk(req.params.team);
+    if (!team) {
+      throw new Error('team not found');
+    }
+    return team;
+  }
 }
 
 module.exports = TasksController;

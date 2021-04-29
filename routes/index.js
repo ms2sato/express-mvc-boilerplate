@@ -5,7 +5,7 @@ const forceAdmin = require('../app/middlewares/force_admin');
 const route = new Route();
 
 // function style
-route.get('/', 'dashboard_controller@index');
+route.get('/', 'top_controller@index');
 
 // single style
 route.get('/user/edit', forceLogin, 'users_controller@edit');
@@ -24,11 +24,12 @@ adminRoute.resource('users', 'admin/users_controller');
   managerRoute.resource('teams', 'manager/teams_controller');
   
   const teamRoute = managerRoute.sub('/teams/:team');  
-  teamRoute.post('/tasks', 'manager/tasks_controller@store');
+  teamRoute.resource('tasks', { controller: 'manager/tasks_controller', only: ['create', 'store'] });
   teamRoute.resource('members', { controller: 'manager/members_controller', only: ['index', 'store', 'destroy'] });
 }
 
 {
+  // for all  
   route.resource('tasks', { controller: 'tasks_controller', only: ['index', 'show', 'edit', 'update', 'destroy'] });
   route.put('/tasks/:task/archived', 'tasks_controller@archive');
 

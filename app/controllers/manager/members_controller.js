@@ -1,59 +1,35 @@
-const debug = require('../../../lib/logger').extend('manager/members_controller');
-
 const Controller = require('../controller');
-
-let index = 1;
-const members = [
-  { id: index++, title: 'テスト1', body: 'テスト1' },
-  { id: index++, title: 'テスト2', body: 'テスト2' },
-];
+const models = require('../../models');
 
 class MembersController extends Controller {
   // GET /
-  index(req, res) {
-    debug(req.params);
-    res.render('manager/members/index', { members: members });
-  }
-
-  // GET /create
-  create(req, res) {
-    debug(req.params);
-    res.render('manager/members/create', { member: { title: '', body: '' } });
+  async index(req, res) {
+    const team = await this._team(req);
+    const members = await team.getMembers({ include: 'user' });
+    const users = await models.User.findAll();
+    res.render('manager/members/index', { team, members, users });
   }
 
   // POST /
-  store(req, res) {
-    // TODO: 新規作成
-    res.redirect('/manager/members/');
-  }
-
-  // GET /:id
-  show(req, res) {
-    debug(req.params);
-    const member = members[req.params.member - 1];
-    res.render('manager/members/show', { member });
-  }
-
-  // GET /:id/edit
-  edit(req, res) {
-    debug(req.params);
-    const member = members[req.params.member - 1];
-    res.render('manager/members/edit', { member });
-  }
-
-  // PUT or PATCH /:id
-  update(req, res) {
-    debug(req.params);
-    //const post = members[req.params.post - 1];
-    // TODO: 編集
-    res.redirect(`/manager/members/${req.params.member}`);
+  async store(req, res) {
+    const team = await this._team(req);
+    await team.createMember({ userId: req.body.userId });
+    res.redirect(`/manager/teams/${team.id}/members/`);
   }
 
   // DELETE /:id
-  destroy(req, res) {
-    debug(req.params);
-    // TODO: 削除
-    res.redirect('/manager/members/');
+  async destroy(req, res) {
+    //TODO: 削除
+    const team = this._team(req);
+    res.redirect(`/manager/teams/${team.id}/members/`);
+  }
+
+  async _team(req) {
+    const team = await models.Team.findByPk(req.params.team);
+    if (!team) {
+      throw new Error('team not found');
+    }
+    return team;
   }
 }
 

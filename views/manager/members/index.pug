@@ -3,15 +3,25 @@ extends ../../layout
 block content 
   h1 member:index
 
-  //- a(href="/manager/members/create") 新規作成
+  h2 新メンバー追加
+  form(action=`/manager/teams/${team.id}/members/`, method="post")
+    _csrf
+    select(name="userId")
+      each user in users 
+        option(value!=user.id)=user.displayName
+    input(type="submit", value="追加")    
 
+  h2 メンバー一覧
   table 
+    thead 
+      tr 
+        th 役割
+        th 名前
+        th 操作
     tbody 
       each member in members
         tr
-          td= member.id
-          td= member.title
+          td= member.role
+          td= member.user.displayName
           td
-            //- a(href=`/manager/members/${member.id}`) 詳細
-            //- a(href=`/manager/members/${member.id}/edit`) 編集
-            //- a(href=`/manager/members/${member.id}?_method=delete`) 削除
+            a(href=`/manager/members/${member.id}?_method=delete`) 削除

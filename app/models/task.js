@@ -75,8 +75,25 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Task.init({
-    title: DataTypes.STRING,
-    body: DataTypes.TEXT,
+    title: {
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: {
+          msg: 'タイトルは空ではいけません'
+        },
+        len: { 
+          msg: 'タイトルは255文字未満です',
+          args: [0, 255]
+        }
+      }
+    },    
+    body: { 
+      type: DataTypes.TEXT,
+      len: { 
+        msg: '本文は4096文字未満です',
+        args: [0, 4096]
+      }
+    },
     status: DataTypes.INTEGER
   }, {
     sequelize,
