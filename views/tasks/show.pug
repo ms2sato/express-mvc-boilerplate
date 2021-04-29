@@ -12,7 +12,7 @@ block content
     a(href=`/tasks/${task.id}?_method=delete`) 削除  
 
     -if(task.isFinished())
-      a(href=`/tasks/${task.id}/archive?_method=put`) アーカイブする
+      a(href=`/tasks/${task.id}/archived?_method=put&_csrf=${csrfToken}`) アーカイブする
     -else if(task.isArchived())
       | アーカイブ済み
 

@@ -70,6 +70,7 @@ class TasksController extends Controller {
 
     try {
       await task.finish(req.body.message);
+      await req.flash('info', '完了報告しました');
       res.redirect(`/tasks/${task.id}`);
     } catch (err) {
       if (err instanceof ValidationError) {
@@ -80,10 +81,11 @@ class TasksController extends Controller {
     }
   }
 
-  async archive(res, req) {
+  async archive(req, res) {
     const task = await this._task(req);
     await task.archive();
-    res.render(`/tasks/${task.id}`);
+    await req.flash('info', 'アーカイブしました');
+    res.redirect(`/tasks/${task.id}`);
   }
 
   async _task(req) {
