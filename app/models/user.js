@@ -55,8 +55,13 @@ module.exports = (sequelize, DataTypes) => {
     displayName:  {
       type: DataTypes.STRING,
       validate: {
-        notEmpty: true,
-        len: [1, 24]
+        notEmpty: {
+          msg: 'displayNameは空ではいけません'
+        },
+        len: { 
+          msg: 'displayNameは3文字以上24文字未満です',
+          args: [3, 24]
+        }
       }
     },
     accessToken:  {
