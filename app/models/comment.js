@@ -22,7 +22,18 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Comment.init({
-    message: DataTypes.TEXT,
+    message: {
+      type: DataTypes.TEXT,
+      validate: {
+        notEmpty: {
+          msg: 'メッセージは空ではいけません'
+        },
+        len: {
+          args: [1, 2048],
+          msg: 'メッセージは2048文字以内です'
+        }
+      }
+    },
     kind: DataTypes.INTEGER
   }, {
     sequelize,

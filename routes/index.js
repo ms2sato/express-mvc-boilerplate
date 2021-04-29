@@ -30,11 +30,10 @@ adminRoute.resource('users', 'admin/users_controller');
 
 {
   route.resource('tasks', { controller: 'tasks_controller', only: ['index', 'show', 'edit', 'update', 'destroy'] });
-  route.post('/tasks/:task/finished', 'tasks_controller@finish');
   route.put('/tasks/:task/archived', 'tasks_controller@archive');
 
   const taskRoute = route.sub('/tasks/:task');
-  taskRoute.resource('comments', { controller: 'comments_controller', only: ['store', 'update', 'destroy'] });
+  taskRoute.resource('comments', { controller: 'comments_controller', only: ['store', 'destroy'] });
 }
 
 module.exports = route.router;

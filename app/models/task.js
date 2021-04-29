@@ -27,6 +27,10 @@ module.exports = (sequelize, DataTypes) => {
         as: 'assignee',
         foreignKey: 'assigneeId'
       });
+
+      this.Comments = this.hasMany(models.Comment, {
+        foreignKey: 'taskId'
+      });
     }
 
     static activeStatuses() {
@@ -42,7 +46,7 @@ module.exports = (sequelize, DataTypes) => {
       await this.save({ field: ['status'] });
     }
 
-    async finish(message) {
+    async finish(message, user) {
       if(this.status !== Task.statuses.notStarted) {
         throw new Error('進行中タスクでなければ完了できません');
       }
@@ -53,7 +57,7 @@ module.exports = (sequelize, DataTypes) => {
         
         await Task.Comment.create({
           taskId: this.id,
-          creatorId: this.assigneeId,
+          creatorId: user.id,
           kind: Task.Comment.statuses.finished,
           message
         });

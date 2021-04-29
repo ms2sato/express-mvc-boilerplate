@@ -1,5 +1,7 @@
 extends ../layout
 
+include ../shared/common
+
 block content 
   h1 
     span=team.name
@@ -22,6 +24,8 @@ block content
     dt body
     dd= task.body
 
+  +error_panel(err)
+
   h2 コメント
 
   ul
@@ -38,15 +42,12 @@ block content
 
     p メッセージ
     textarea(name="message", cols="30", rows="5") 
-    input(type="submit", value="送信")
 
-  - if(task.isNotStarted())
-    h3 完了報告
-    form(action=`/tasks/${task.id}/finished`, method="post")
-      _csrf
+    - if(task.isNotStarted())
+      p 完了報告
+      input(type="checkbox", name="finished")
+    - else
+      p 既に完了報告済みです
 
-      p メッセージ
-      textarea(name="message", cols="30", rows="5") 
-      input(type="submit", value="完了")
-  - else
-    p 既に完了報告済みです
+    div
+      input(type="submit", value="送信")

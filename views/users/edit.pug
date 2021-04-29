@@ -1,5 +1,7 @@
 extends ../layout
 
+include ../shared/common.pug
+
 block content 
   h2= __('views.Profile')
 
@@ -7,10 +9,7 @@ block content
     _method put
     _csrf
 
-    - if(err)
-      ul.errors
-        each error in err.errors
-          li= error.message
+    +error_panel(err, user)
 
     div
       input(name="displayName", value!=user.displayName)

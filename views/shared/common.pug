@@ -1,0 +1,12 @@
+//- err: Sequelizeのエラーオブジェクト
+//- instance[option]: フィルターしたい場合に指定するエラーを発生させたSequelizeモデル
+mixin error_panel(err, instance)
+  - if(err)
+    - if(instance)
+      - errors = err.errors.filter((errorItem)=>{ return errorItem.instance === instance })
+    - else 
+      - errors = err.errors 
+
+    ul.errors
+      each error in errors
+        li= error.message

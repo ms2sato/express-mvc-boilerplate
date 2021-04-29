@@ -2,12 +2,7 @@ const debug = require('../../lib/logger').extend('comments_controller');
 
 const Controller = require('./controller');
 const models = require('../models');
-
-let index = 1;
-const comments = [
-  { id: index++, title: 'テスト1', body: 'テスト1' },
-  { id: index++, title: 'テスト2', body: 'テスト2' },
-];
+const { ValidationError } = require('sequelize');
 
 class CommentsController extends Controller {
   // POST /
@@ -21,29 +16,31 @@ class CommentsController extends Controller {
       throw new Error('task not found');
     }
 
-    // TODO: もっと良い書き方はありそう
-    const comment = models.Comment.build(req.body);
-    comment.taskId = task.id;
-    comment.creatorId = req.user.id;
-    comment.status = models.Comment.statuses.normal;
-    await comment.save( { fields: ['status', 'message', 'taskId', 'creatorId'] });
-    
-    res.redirect(`/tasks/${task.id}`);
-  }
+    try {
 
-  // GET /:id/edit
-  edit(req, res) {
-    debug(req.params);
-    const comment = comments[req.params.comment - 1];
-    res.render('comments/edit', { comment });
-  }
+      if(req.body.finished) {
+        await task.finish(req.body.message, req.user);
+        await req.flash('info', '完了報告しました');
+      } else {
+        // TODO: もっと良い書き方はありそう
+        const comment = models.Comment.build(req.body);
+        comment.taskId = task.id;
+        comment.creatorId = req.user.id;
+        comment.status = models.Comment.statuses.normal;
+        await comment.save( { fields: ['status', 'message', 'taskId', 'creatorId'] });
+        await req.flash('info', 'コメントしました');
+      }
+      res.redirect(`/tasks/${task.id}`);
 
-  // PUT or PATCH /:id
-  update(req, res) {
-    debug(req.params);
-    //const post = comments[req.params.post - 1];
-    // TODO: 編集
-    res.redirect(`/comments/${req.params.comment}`);
+    } catch (err) {
+      if (err instanceof ValidationError) {
+        const team = await task.getTeam();
+        const comments = await task.getComments({ include: 'creator' });
+        res.render(`tasks/show`, { task, team, comments, err: err });
+      } else {
+        throw err;
+      }
+    }
   }
 
   // DELETE /:id

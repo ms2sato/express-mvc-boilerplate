@@ -29,7 +29,7 @@ class TasksController extends Controller {
     debug(req.params);
     const task = await this._task(req);
     const team = await task.getTeam();
-    const comments = await models.Comment.findAll({ where: { taskId: task.id }, include: 'creator' });
+    const comments = await task.getComments({ include: 'creator' });
 
     res.render('tasks/show', { task, team, comments });
   }
@@ -63,22 +63,6 @@ class TasksController extends Controller {
     debug(req.params);
     // TODO: 削除
     res.redirect('/tasks/');
-  }
-
-  async finish(req, res) {
-    const task = await this._task(req);
-
-    try {
-      await task.finish(req.body.message);
-      await req.flash('info', '完了報告しました');
-      res.redirect(`/tasks/${task.id}`);
-    } catch (err) {
-      if (err instanceof ValidationError) {
-        res.render(`tasks/${task.id}`, { task, err: err });
-      } else {
-        throw err;
-      }
-    }
   }
 
   async archive(req, res) {
