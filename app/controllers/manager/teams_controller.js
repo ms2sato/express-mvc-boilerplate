@@ -1,6 +1,7 @@
 const debug = require('../../../lib/logger').extend('manager/teams_controller');
 
 const Controller = require('../controller');
+const models = require('../../models');
 
 let index = 1;
 const teams = [
@@ -28,10 +29,10 @@ class TeamsController extends Controller {
   }
 
   // GET /:id
-  show(req, res) {
-    debug(req.params);
-    const team = teams[req.params.team - 1];
-    res.render('manager/teams/show', { team });
+  async show(req, res) {
+    const team = await this._team(req);
+    const tasks = await team.getTasks({ include: 'team' });
+    res.render('manager/teams/show', { team, tasks });
   }
 
   // GET /:id/edit
@@ -54,6 +55,14 @@ class TeamsController extends Controller {
     debug(req.params);
     // TODO: 削除
     res.redirect('/manager/teams/');
+  }
+
+  async _team(req) {
+    const team = await models.Team.findByPk(req.params.team);
+    if (!team) {
+      throw new Error('team not found');
+    }
+    return team;
   }
 }
 

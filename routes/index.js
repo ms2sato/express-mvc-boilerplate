@@ -5,9 +5,7 @@ const forceAdmin = require('../app/middlewares/force_admin');
 const route = new Route();
 
 // function style
-route.get('/', function (req, res, _next) {
-  res.render('index', { title: 'Express', user: req.user });
-});
+route.get('/', 'dashboard_controller@index');
 
 // single style
 route.get('/user/edit', forceLogin, 'users_controller@edit');

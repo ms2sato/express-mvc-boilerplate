@@ -1,6 +1,33 @@
 extends layout
 
 block content
-  p Welcome to #{title}
-  p 
-    a(href="/examples") CRUDのリソースのサンプル      
+  - if(user)
+    h2 アサインされているタスク
+
+    include shared/task_table.pug
+    +task_table(tasks)
+
+    h2 所属しているチーム
+
+    table
+      tbody 
+        tr 
+          th チームID
+          th 名前
+          th 役割
+          th 作成日時
+          th 操作
+
+        each member in members
+          - team = member.team
+          tr
+            td= team.id
+            td= team.name
+            td= member.role
+            td= member.createdAt
+            td
+              - if(member.isManager())
+                a(href=`/manager/teams/${team.id}`) 管理
+
+  - else 
+    p ログインしてから操作してください

@@ -8,8 +8,8 @@ block content
     _method('put')
 
     div
-      input(name="title")
+      input(name="title", value!=task.title)
     div  
-      textarea(name="body")
+      textarea(name="body")=task.body
     div
       input(type="submit")

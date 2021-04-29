@@ -11,6 +11,9 @@ block content
 
   h2 タスク一覧
 
+  include ../../shared/task_table.pug
+  +task_table(tasks)
+
   div
     form(action=`/manager/teams/${team.id}/tasks`, method="post")
       _csrf

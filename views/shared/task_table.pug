@@ -1,25 +1,22 @@
-extends ../layout
-
-block content 
-  h1 Example:index
-
-  a(href="/tasks/create") 新規作成
-
-  h2 アサインされているタスク一覧
-
+mixin task_table(tasks)
   table
     tbody 
       tr 
         th チーム
         th タスクID
+        th 状態
         th タイトル
+        th 担当者
         th 作成日時
+        th 操作
 
       each task in tasks
         tr
           td= task.team.name
           td= task.id
+          td= task.status
           td= task.title
+          td= (task.assignee) ? task.assignee.displayName : 'なし'
           td= task.createdAt
           td
             a(href=`/tasks/${task.id}`) 詳細

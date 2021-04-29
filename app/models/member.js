@@ -11,12 +11,18 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       this.Team = this.belongsTo(models.Team, {
-        foreignKey: 'teamId'
+        foreignKey: 'teamId',
+        as: 'team'
       });
 
       this.User = this.belongsTo(models.User, {
-        foreignKey: 'userId'
+        foreignKey: 'userId',
+        as: 'user'
       });
+    }
+
+    isManager() {
+      return Member.roles.manager == this.role;
     }
   }
   Member.init({
@@ -25,5 +31,7 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Member',
   });
+  Member.roles = { normal: 0, manager: 1 };
   return Member;
 };
+

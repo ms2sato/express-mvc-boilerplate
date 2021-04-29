@@ -2,17 +2,13 @@ const debug = require('../../lib/logger').extend('tasks_controller');
 
 const Controller = require('./controller');
 const models = require('../models');
-
-let index = 1;
-const tasks = [
-  { id: index++, title: 'テスト1', body: 'テスト1' },
-  { id: index++, title: 'テスト2', body: 'テスト2' },
-];
+const { ValidationError } = require('sequelize');
 
 class TasksController extends Controller {
   // GET /
-  index(req, res) {
+  async index(req, res) {
     debug(req.params);
+    const tasks = await models.Task.findAll({ where: { assigneeId: req.user.id }, include: 'team' });
     res.render('tasks/index', { tasks: tasks });
   }
 
@@ -31,30 +27,35 @@ class TasksController extends Controller {
   // GET /:id
   async show(req, res) {
     debug(req.params);
-    const task = await models.Task.findByPk(req.params.task);
-    if(!task) {
-      throw new Error('task not found');
-    }
-
+    const task = await this._task(req);
     const team = await task.getTeam();
     const comments = await models.Comment.findAll({ where: { taskId: task.id }, include: 'creator' });
-    
+
     res.render('tasks/show', { task, team, comments });
   }
 
   // GET /:id/edit
-  edit(req, res) {
+  async edit(req, res) {
     debug(req.params);
-    const task = tasks[req.params.task - 1];
+    const task = await this._task(req);
     res.render('tasks/edit', { task });
   }
 
   // PUT or PATCH /:id
-  update(req, res) {
-    debug(req.params);
-    //const post = tasks[req.params.post - 1];
-    // TODO: 編集
-    res.redirect(`/tasks/${req.params.task}`);
+  async update(req, res) {
+    const task = await this._task(req);
+    try {
+      task.set(req.body);
+      await task.save({ fields: ['title', 'body'] });
+      await req.flash('info', '更新しました');
+      res.redirect(`/tasks/${req.params.task}`);
+    } catch (err) {
+      if (err instanceof ValidationError) {
+        res.render('tasks/edit', { task, err: err });
+      } else {
+        throw err;
+      }
+    }
   }
 
   // DELETE /:id
@@ -68,6 +69,14 @@ class TasksController extends Controller {
     debug(req.params);
     // TODO: 完了
     res.redirect('/tasks/');
+  }
+
+  async _task(req) {
+    const task = await models.Task.findByPk(req.params.task);
+    if (!task) {
+      throw new Error('task not found');
+    }
+    return task;
   }
 }
 
