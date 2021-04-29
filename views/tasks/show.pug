@@ -11,14 +11,10 @@ block content
     a(href=`/tasks/${task.id}/edit`) 編集
     a(href=`/tasks/${task.id}?_method=delete`) 削除  
 
-    p 作業者専用
-    form(action=`/tasks/${task.id}`, method="post")
-      _csrf
-      _method('put')
-
-      p 報告
-      textarea(name="finish_message", cols="30", rows="5") 
-      input(type="submit", value="完了")
+    -if(task.isFinished())
+      a(href=`/tasks/${task.id}/archive?_method=put`) アーカイブする
+    -else if(task.isArchived())
+      | アーカイブ済み
 
   dl
     dt title
@@ -28,17 +24,29 @@ block content
 
   h2 コメント
 
-  form(action=`/tasks/${task.id}/comments`, method="post")
-    _csrf
-
-    p コメント
-    textarea(name="message", cols="30", rows="5") 
-    input(type="submit", value="送信")
-
   ul
-    //- コメント欄を出すのが一番大変そう。user情報は最初はIDだけ出れば許して良い
+    //- creator.displayName とincludeさせるのが大変そうならまずはIDだけ
     each comment in comments
       li
         div= comment.message
+        div= comment.kind
         div= comment.creator.displayName
         div= comment.createdAt
+
+  form(action=`/tasks/${task.id}/comments`, method="post")
+    _csrf
+
+    p メッセージ
+    textarea(name="message", cols="30", rows="5") 
+    input(type="submit", value="送信")
+
+  - if(task.isNotStarted())
+    h3 完了報告
+    form(action=`/tasks/${task.id}/finished`, method="post")
+      _csrf
+
+      p メッセージ
+      textarea(name="message", cols="30", rows="5") 
+      input(type="submit", value="完了")
+  - else
+    p 既に完了報告済みです

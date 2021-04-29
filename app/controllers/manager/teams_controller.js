@@ -31,7 +31,13 @@ class TeamsController extends Controller {
   // GET /:id
   async show(req, res) {
     const team = await this._team(req);
-    const tasks = await team.getTasks({ include: 'team' });
+    const tasks = await team.getTasks({
+      include: ['team', 'assignee'],
+      where: {
+        status: models.Task.activeStatuses()
+      },
+      order: [['status', 'DESC'], ['updatedAt', 'DESC']]
+    });
     res.render('manager/teams/show', { team, tasks });
   }
 

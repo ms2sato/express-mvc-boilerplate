@@ -65,10 +65,25 @@ class TasksController extends Controller {
     res.redirect('/tasks/');
   }
 
-  finish(req, res) {
-    debug(req.params);
-    // TODO: 完了
-    res.redirect('/tasks/');
+  async finish(req, res) {
+    const task = await this._task(req);
+
+    try {
+      await task.finish(req.body.message);
+      res.redirect(`/tasks/${task.id}`);
+    } catch (err) {
+      if (err instanceof ValidationError) {
+        res.render(`tasks/${task.id}`, { task, err: err });
+      } else {
+        throw err;
+      }
+    }
+  }
+
+  async archive(res, req) {
+    const task = await this._task(req);
+    await task.archive();
+    res.render(`/tasks/${task.id}`);
   }
 
   async _task(req) {

@@ -1,12 +1,5 @@
-// const debug = require('../../../lib/logger').extend('manager/tasks_controller');
-
 const Controller = require('../controller');
-
-let index = 1;
-const tasks = [
-  { id: index++, title: 'テスト1', body: 'テスト1' },
-  { id: index++, title: 'テスト2', body: 'テスト2' },
-];
+const models = require('../../models');
 
 class TasksController extends Controller {
   // // GET /
