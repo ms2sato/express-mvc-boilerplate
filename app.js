@@ -101,6 +101,11 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(function currentUser(req, res, next) {
+  res.locals.currentUser = req.user;
+  next();
+});
+
 app.use(i18n.init);
 
 // @see http://expressjs.com/en/resources/middleware/method-override.html

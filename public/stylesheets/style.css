@@ -7,6 +7,10 @@ a {
   color: #00B7FF;
 }
 
+header>nav {
+  text-align: right;
+}
+
 .wrapper {
   max-width: 960px;
   width: 100%;

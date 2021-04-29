@@ -6,8 +6,18 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
     .wrapper
-      h1 
-        a(href="/")= __('AppTitle')
+      header
+        h1 
+          a(href="/")= __('AppTitle')
+        nav 
+          if currentUser 
+            |  #{currentUser.displayName}&nbsp;
+            a(href="/logout") Logout
+          else 
+            a(href="/login") Login  
+          |  
+          a(href="/user/edit") プロフィール編集
+
 
       if flashMessages 
         if flashMessages.info.length > 0
