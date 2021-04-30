@@ -3,9 +3,8 @@ extends ../layout
 block content 
   h2= __('views.Profile')
 
-
   form(action=`/user`, method="post")
-    _method('put')
+    _method put
     _csrf
 
     - if(err)

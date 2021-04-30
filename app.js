@@ -55,19 +55,29 @@ app.use((req, res, next) => {
       preCodeGen: (ast, _options) => {
         return walk(ast, null, (node, replace) => {
           if (node.name === '_method') {
-            if (node.attrs.length !== 1) {
-              throw new Error('method() の引数は一つだけです。');
+            console.log(JSON.stringify(node));
+
+            if (node.attrs.length !== 0) {
+              throw new Error('method の引数は指定できません');
             }
-            const method = node.attrs[0].name;
-            if (!overridableMethods.includes(method.toUpperCase())) {
-              throw new Error(`methodの引数は${overridableMethods.join(',')}のうちの一つです: ${method}`);
+
+            const innerNode = node.block.nodes[0];
+            let valueAttr;
+            if(innerNode.type === 'Text') {
+              const method = innerNode.val;
+              if (!overridableMethods.includes(method.toUpperCase())) {
+                throw new Error(`methodの引数は${overridableMethods.join(',')}のうちの一つです: ${method}`);
+              }
+              valueAttr = { name: 'value', val: `"${method}"`, mustEscape: true };
+            } else if(innerNode.type === 'Code') {
+              valueAttr = { name: 'value', val: innerNode.val, mustEscape: false };
             }
 
             replace({
-              ...node, type: 'Tag', name: 'input', attrs: [
+              ...node, type: 'Tag', selfClosing: true, block: null, name: 'input', attrs: [
                 { name: 'type', val: '"hidden"', mustEscape: true },
                 { name: 'name', val: '"_method"', mustEscape: true },
-                { name: 'value', val: `"${method}"`, mustEscape: true }
+                valueAttr
               ]
             });
           }
