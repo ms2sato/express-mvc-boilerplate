@@ -60,7 +60,7 @@ app.use((req, res, next) => {
             }
             const method = node.attrs[0].name;
             if (!overridableMethods.includes(method.toUpperCase())) {
-              throw new Error(`methodの引数は${overridableMethods.join(',')}のうちの一つです`);
+              throw new Error(`methodの引数は${overridableMethods.join(',')}のうちの一つです: ${method}`);
             }
 
             replace({
