@@ -24,13 +24,13 @@ adminRoute.resource('users', 'admin/users_controller');
   managerRoute.resource('teams', 'manager/teams_controller');
   
   const teamRoute = managerRoute.sub('/teams/:team');  
-  teamRoute.resource('tasks', { controller: 'manager/tasks_controller', only: ['create', 'store'] });
+  teamRoute.resource('tasks', { controller: 'manager/tasks_controller', only: ['create', 'store', 'edit', 'update'] });
   teamRoute.resource('members', { controller: 'manager/members_controller', only: ['index', 'store', 'destroy'] });
 }
 
 {
   // for all  
-  route.resource('tasks', { controller: 'tasks_controller', only: ['index', 'show', 'edit', 'update', 'destroy'] });
+  route.resource('tasks', { controller: 'tasks_controller', only: ['index', 'show'] });
   route.put('/tasks/:task/archived', 'tasks_controller@archive');
 
   const taskRoute = route.sub('/tasks/:task');

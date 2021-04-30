@@ -1,18 +1,8 @@
 extends ../../layout
 
-include ../../shared/common
+include ./form
 
 block content 
-  h1 Task:create
+  h1 タスクの新規作成
 
-  +error_panel(err)
-
-  form(action=`/manager/teams/${team.id}/tasks`, method="post")
-    _csrf
-    
-    div
-      input(name="title", value!=task.title)
-    div  
-      textarea(name="body", value!=task.body)
-    div
-      input(type="submit")
+  +task_form(`/manager/teams/${team.id}/tasks`, 'post', task, err)

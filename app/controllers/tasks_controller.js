@@ -2,7 +2,6 @@ const debug = require('../../lib/logger').extend('tasks_controller');
 
 const Controller = require('./controller');
 const models = require('../models');
-const { ValidationError } = require('sequelize');
 
 class TasksController extends Controller {
   // GET /
@@ -12,18 +11,6 @@ class TasksController extends Controller {
     res.render('tasks/index', { tasks: tasks });
   }
 
-  // GET /create
-  // create(req, res) {
-  //   debug(req.params);
-  //   res.render('tasks/create', { task: { title: '', body: '' } });
-  // }
-
-  // POST /
-  // store(req, res) {
-  //   // TODO: 新規作成
-  //   res.redirect('/tasks/');
-  // }
-
   // GET /:id
   async show(req, res) {
     debug(req.params);
@@ -32,30 +19,6 @@ class TasksController extends Controller {
     const comments = await task.getComments({ include: 'creator' });
 
     res.render('tasks/show', { task, team, comments });
-  }
-
-  // GET /:id/edit
-  async edit(req, res) {
-    debug(req.params);
-    const task = await this._task(req);
-    res.render('tasks/edit', { task });
-  }
-
-  // PUT or PATCH /:id
-  async update(req, res) {
-    const task = await this._task(req);
-    try {
-      task.set(req.body);
-      await task.save({ fields: ['title', 'body'] });
-      await req.flash('info', '更新しました');
-      res.redirect(`/tasks/${req.params.task}`);
-    } catch (err) {
-      if (err instanceof ValidationError) {
-        res.render('tasks/edit', { task, err: err });
-      } else {
-        throw err;
-      }
-    }
   }
 
   // DELETE /:id

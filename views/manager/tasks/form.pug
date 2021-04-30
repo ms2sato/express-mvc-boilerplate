@@ -1,0 +1,16 @@
+include ../../shared/common
+
+mixin task_form(action, method, task, err)
+
+  form(action!=action, method='post')
+    _csrf
+    _method=method
+  
+    +error_panel(err)
+    
+    div
+      input(name="title", value!=task.title)
+    div  
+      textarea(name="body")=task.body
+    div
+      input(type="submit")

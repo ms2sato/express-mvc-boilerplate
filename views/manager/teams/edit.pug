@@ -5,7 +5,7 @@ block content
 
   form(action=`/manager/teams/${team.id}`, method="post")
     _csrf
-    _method('put')
+    _method put
 
     div
       input(name="title")
