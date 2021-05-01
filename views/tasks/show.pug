@@ -10,9 +10,6 @@ block content
 
   div
     p マネージャ専用
-    a(href=`/tasks/${task.id}/edit`) 編集
-    a(href=`/tasks/${task.id}?_method=delete`) 削除  
-
     -if(task.isFinished())
       a(href=`/tasks/${task.id}/archived?_method=put&_csrf=${csrfToken}`) アーカイブする
     -else if(task.isArchived())
