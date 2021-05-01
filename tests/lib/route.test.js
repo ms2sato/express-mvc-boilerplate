@@ -96,25 +96,25 @@ test('should call [dir]/[controller]@[action]', () => {
 
 describe('#resource', () => {
   class ResourcesController {
-    index(req, res) {
+    index(_req, _res) {
     }
   
-    create(req, res) {
+    create(_req, _res) {
     }
   
-    store(req, res) {
+    store(_req, _res) {
     }
   
-    show(req, res) {
+    show(_req, _res) {
     }
   
-    edit(req, res) {
+    edit(_req, _res) {
     }
   
-    update(req, res) {
+    update(_req, _res) {
     }
   
-    destroy(req, res) {
+    destroy(_req, _res) {
     }  
   }
 
