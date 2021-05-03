@@ -24,3 +24,7 @@ block content
     dd= user.accessToken
     dt refreshToken
     dd= user.refreshToken
+    dt createdAt
+    dd= helpers.formatDateTime(user.createdAt)
+    dt updatedAt
+    dd= helpers.formatDateTime(user.updatedAt)

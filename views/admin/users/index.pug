@@ -3,7 +3,8 @@ extends ../../layout
 block content 
   h1 ユーザー管理
 
-  a(href="/admin/users/create") 新規作成
+  .actions
+    a(href="/admin/users/create") 新規作成
 
   table(border=1)
     thead 
@@ -32,8 +33,8 @@ block content
           td= user.role
           td= user.accessToken
           td= user.refreshToken 
-          td= user.createdAt
-          td= user.updatedAt
+          td= helpers.formatDateTime(user.createdAt)
+          td= helpers.formatDateTime(user.updatedAt)
           td
             a(href=`/admin/users/${user.id}`) 詳細
             a(href=`/admin/users/${user.id}/edit`) 編集

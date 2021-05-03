@@ -1,12 +1,13 @@
 const { ValidationError } = require('sequelize');
 const Controller = require('../controller');
 const models = require('../../models');
+const helpers = require('../../../lib/helpers');
 
 class UsersController extends Controller {
   // GET /
   async index(req, res) {
     const users = await models.User.findAll({ order: [['id', 'DESC']] });
-    res.render('admin/users/index', { users: users });
+    res.render('admin/users/index', { users: users, helpers });
   }
 
   // GET /create
@@ -19,12 +20,12 @@ class UsersController extends Controller {
   async store(req, res) {
     const user = models.User.build(req.body);
     try {
-      let fields = [ 'provider', 'uid', 'username', 'email', 'displayName', 'accessToken', 'refreshToken', 'role' ];
+      let fields = ['provider', 'uid', 'username', 'email', 'displayName', 'accessToken', 'refreshToken', 'role'];
       await user.save({ fields });
     } catch (err) {
-      if(err instanceof ValidationError) {
+      if (err instanceof ValidationError) {
         res.render('admin/users/create', { user, err });
-      } else{
+      } else {
         throw err;
       }
     }
@@ -36,7 +37,7 @@ class UsersController extends Controller {
   // GET /:id
   async show(req, res) {
     const user = await this._user(req);
-    res.render('admin/users/show', { user });
+    res.render('admin/users/show', { user, helpers });
   }
 
   // GET /:id/edit
@@ -51,18 +52,18 @@ class UsersController extends Controller {
     try {
       user.set(req.body);
 
-      let fields = [ 'provider', 'uid', 'username', 'email', 'displayName', 'accessToken', 'refreshToken' ];
-      if(user.id !== req.user.id) {
-        fields = [ ...fields, 'role' ];
-      } 
+      let fields = ['provider', 'uid', 'username', 'email', 'displayName', 'accessToken', 'refreshToken'];
+      if (user.id !== req.user.id) {
+        fields = [...fields, 'role'];
+      }
 
       await user.save({ fields });
       await req.flash('info', '更新しました');
       res.redirect(`/admin/users/${req.params.user}`);
     } catch (err) {
-      if(err instanceof ValidationError) {
+      if (err instanceof ValidationError) {
         res.render('admin/users/edit', { user, err });
-      } else{
+      } else {
         throw err;
       }
     }
@@ -71,8 +72,8 @@ class UsersController extends Controller {
   // DELETE /:id
   async destroy(req, res) {
     const user = await this._user(req);
-    if(user.id === req.user.id) {
-      await req.flash('alert', '自分は削除できません');  
+    if (user.id === req.user.id) {
+      await req.flash('alert', '自分は削除できません');
       return res.redirect('/admin/users/');
     }
 
@@ -83,7 +84,7 @@ class UsersController extends Controller {
 
   async _user(req) {
     const user = await models.User.findByPk(req.params.user);
-    if(!user) {
+    if (!user) {
       throw new Error('User not find');
     }
     return user;

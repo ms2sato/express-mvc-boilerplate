@@ -1,5 +1,5 @@
 mixin admin_user_form(action, method, user, err)
-  form(action=action, method="post")
+  form.box(action=action, method="post")
     _csrf
     _method=method
 
@@ -35,5 +35,5 @@ mixin admin_user_form(action, method, user, err)
       label(for='refreshToken') refreshToken
       input#refreshToken(name="refreshToken", value!=user.refreshToken)
       
-    div
+    div.actions
       input(type="submit")
