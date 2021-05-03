@@ -9,15 +9,22 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       taskId: {
-        type: Sequelize.INTEGER
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: { model: 'Tasks', key: 'id' }
       },
       creatorId: {
-        type: Sequelize.INTEGER
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: { model: 'Users', key: 'id' }
       },
       message: {
+        allowNull: false,
         type: Sequelize.TEXT
       },
       kind: {
+        allowNull: false,
+        defaultValue: 0,
         type: Sequelize.INTEGER
       },
       createdAt: {

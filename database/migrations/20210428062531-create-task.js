@@ -9,21 +9,29 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       teamId: {
-        type: Sequelize.INTEGER
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: { model: 'Teams', key: 'id' }
       },
       creatorId: {
-        type: Sequelize.INTEGER
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: { model: 'Users', key: 'id' }
       },
       assigneeId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: { model: 'Users', key: 'id' }
       },
       title: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       body: {
         type: Sequelize.TEXT
       },
       status: {
+        allowNull: false,
+        defaultValue: 0,
         type: Sequelize.INTEGER
       },
       createdAt: {

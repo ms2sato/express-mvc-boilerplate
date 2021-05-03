@@ -9,12 +9,18 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       teamId: {
-        type: Sequelize.INTEGER
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: { model: 'Teams', key: 'id' }
       },
       userId: {
-        type: Sequelize.INTEGER
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: { model: 'Users', key: 'id' }
       },
       role: {
+        allowNull: false,
+        defaultValue: 0,
         type: Sequelize.INTEGER
       },
       createdAt: {
@@ -26,6 +32,8 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
+
+    await queryInterface.addIndex('Members', ['teamId', 'userId'], { unique: true });
   },
   down: async (queryInterface, _Sequelize) => {
     await queryInterface.dropTable('Members');
