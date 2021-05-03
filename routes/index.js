@@ -22,7 +22,9 @@ adminRoute.resource('users', 'admin/users_controller');
 {
   // for manager
   const managerRoute = route.sub('/manager', forceLogin);
-  managerRoute.resource('teams', managableTeam, 'manager/teams_controller');
+  managerRoute.resource('teams', managableTeam, {
+    controller: 'manager/teams_controller', only: ['show', 'edit', 'update', 'destroy']
+  });
 
   const teamRoute = managerRoute.sub('/teams/:team', managableTeam);
   teamRoute.resource('tasks', { controller: 'manager/tasks_controller', only: ['create', 'store', 'edit', 'update'] });
@@ -31,6 +33,7 @@ adminRoute.resource('users', 'admin/users_controller');
 
 {
   // for all  
+  route.resource('teams', { controller: 'teams_controller', only: ['create', 'store'] });
   route.resource('tasks', { controller: 'tasks_controller', only: ['index', 'show'] });
   route.put('/tasks/:task/archived', 'tasks_controller@archive');
 

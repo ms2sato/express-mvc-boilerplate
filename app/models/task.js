@@ -60,7 +60,7 @@ module.exports = (sequelize, DataTypes) => {
           creatorId: user.id,
           kind: Task.Comment.statuses.finished,
           message
-        });
+        }, { transaction: t });
       });
     }
 

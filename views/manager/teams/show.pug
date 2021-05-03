@@ -3,13 +3,14 @@ extends ../../layout
 block content 
   h1=team.name
 
-  div 
+  div.actions
+    a(href=`/manager/teams/${team.id}/tasks/create`) 新規タスク作成
+    | &nbsp;
     a(href=`/manager/teams/${team.id}/members`) メンバー管理
+    | &nbsp;
+    a(href=`/manager/teams/${team.id}/edit`) 編集
 
   h2 タスク一覧
-
-  div 
-    a(href=`/manager/teams/${team.id}/tasks/create`) 新規タスク作成
 
   table
     tbody 

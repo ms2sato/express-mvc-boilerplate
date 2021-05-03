@@ -1,36 +1,11 @@
-const debug = require('../../../lib/logger').extend('manager/teams_controller');
-
 const Controller = require('../controller');
 const models = require('../../models');
-
-let index = 1;
-const teams = [
-  { id: index++, title: 'テスト1', body: 'テスト1' },
-  { id: index++, title: 'テスト2', body: 'テスト2' },
-];
+const { ValidationError } = require('sequelize');
 
 class TeamsController extends Controller {
-  // GET /
-  index(req, res) {
-    debug(req.params);
-    res.render('manager/teams/index', { teams: teams });
-  }
-
-  // GET /create
-  create(req, res) {
-    debug(req.params);
-    res.render('manager/teams/create', { team: { title: '', body: '' } });
-  }
-
-  // POST /
-  store(req, res) {
-    // TODO: 新規作成
-    res.redirect('/manager/teams/');
-  }
-
   // GET /:id
   async show(req, res) {
-    const team = await this._team(req);
+    const team = req.team;
     const tasks = await team.getTasks({
       include: ['team', 'assignee'],
       where: {
@@ -43,32 +18,31 @@ class TeamsController extends Controller {
 
   // GET /:id/edit
   edit(req, res) {
-    debug(req.params);
-    const team = teams[req.params.team - 1];
+    const team = req.team;
     res.render('manager/teams/edit', { team });
   }
 
   // PUT or PATCH /:id
-  update(req, res) {
-    debug(req.params);
-    //const post = teams[req.params.post - 1];
-    // TODO: 編集
-    res.redirect(`/manager/teams/${req.params.team}`);
+  async update(req, res) {
+    const team = req.team;
+    try {
+      team.set(req.body);
+      await team.save({ fields: ['name'] });
+      await req.flash('info', '更新しました');
+      res.redirect(`/manager/teams/${team.id}`);
+    } catch (err) {
+      if (err instanceof ValidationError) {
+        res.render('manager/teams/edit', { team, err: err });
+      } else {
+        throw err;
+      }
+    }
   }
 
   // DELETE /:id
   destroy(req, res) {
-    debug(req.params);
     // TODO: 削除
     res.redirect('/manager/teams/');
-  }
-
-  async _team(req) {
-    const team = await models.Team.findByPk(req.params.team);
-    if (!team) {
-      throw new Error('team not found');
-    }
-    return team;
   }
 }
 
