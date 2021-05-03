@@ -26,8 +26,8 @@ mixin admin_user_form(action, method, user, err)
     div
       label(for='role') role
       select#role(name="role")
-        each value, label in user.constructor.roles
-          option(value!=value, selected=(user.role === value))=label
+        each value in user.constructor.roles
+          option(value!=value, selected=(user.role === value))=__(`models.User.roles.${value}`)
     div
       label(for='accessToken') accessToken
       input#accessToken(name="accessToken", value!=user.accessToken)

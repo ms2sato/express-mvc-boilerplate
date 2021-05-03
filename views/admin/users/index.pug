@@ -30,7 +30,7 @@ block content
           td= user.username
           td= user.email
           td= user.displayName 
-          td= user.role
+          td= __(`models.User.roles.${user.role}`)
           td= user.accessToken
           td= user.refreshToken 
           td= helpers.formatDateTime(user.createdAt)

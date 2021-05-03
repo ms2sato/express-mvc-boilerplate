@@ -11,9 +11,11 @@ html
           a(href="/")= __('AppTitle')
         nav 
           if(currentUser)
-            |  #{currentUser.displayName}&nbsp;
+            span=__(`models.User.roles.${currentUser.role}`)
+            | : #{currentUser.displayName}&nbsp;
             if(currentUser.isAdmin())
-              a(href="/admin/users") ユーザー管理（管理者専用）
+              a(href="/admin/users") ユーザー管理
+              | &nbsp;
             a(href="/logout") Logout
           else 
             a(href="/login") Login  
