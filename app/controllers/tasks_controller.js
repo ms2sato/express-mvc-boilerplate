@@ -13,21 +13,9 @@ class TasksController extends Controller {
     const task = await this._task(req);
     const team = await task.getTeam();
     const comments = await task.getComments({ include: 'creator' });
+    const isManager = await team.isManager(req.user);
 
-    res.render('tasks/show', { task, team, comments });
-  }
-
-  // DELETE /:id
-  destroy(req, res) {
-    // TODO: 削除
-    res.redirect('/tasks/');
-  }
-
-  async archive(req, res) {
-    const task = await this._task(req);
-    await task.archive();
-    await req.flash('info', 'アーカイブしました');
-    res.redirect(`/tasks/${task.id}`);
+    res.render('tasks/show', { task, team, comments, isManager });
   }
 
   async _task(req) {

@@ -53,6 +53,20 @@ class TasksController extends Controller {
     }
   }
 
+  // DELETE /:id
+  destroy(req, res) {
+    // TODO: 削除
+    res.redirect('/tasks/');
+  }
+
+  async archive(req, res) {
+    const team = req.team;
+    const task = await this._task(team, req.params.task);
+    await task.archive();
+    await req.flash('info', 'アーカイブしました');
+    res.redirect(`/tasks/${task.id}`);
+  }
+
   async _task(team, id) {
     const tasks = await team.getTasks({ where: { id }, limit: 1 });
     if (tasks.length === 0) {

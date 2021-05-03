@@ -8,12 +8,13 @@ block content
     span &nbsp;/&nbsp;
     span=task.title
 
-  div
-    p マネージャ専用
-    -if(task.isFinished())
-      a(href=`/tasks/${task.id}/archived?_method=put&_csrf=${csrfToken}`) アーカイブする
-    -else if(task.isArchived())
-      | アーカイブ済み
+  - if(isManager)
+    div
+      p マネージャ操作
+      - if(task.isFinished())
+        a(href=`/manager/teams/${team.id}/tasks/${task.id}/archived?_method=put&_csrf=${csrfToken}`) アーカイブする
+      - else if(task.isArchived())
+        | アーカイブ済み
 
   dl
     dt title
@@ -26,7 +27,6 @@ block content
   h2 コメント
 
   ul
-    //- creator.displayName とincludeさせるのが大変そうならまずはIDだけ
     each comment in comments
       li
         div= comment.message
