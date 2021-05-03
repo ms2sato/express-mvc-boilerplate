@@ -55,21 +55,19 @@ app.use((req, res, next) => {
       preCodeGen: (ast, _options) => {
         return walk(ast, null, (node, replace) => {
           if (node.name === '_method') {
-            console.log(JSON.stringify(node));
-
             if (node.attrs.length !== 0) {
               throw new Error('method の引数は指定できません');
             }
 
             const innerNode = node.block.nodes[0];
             let valueAttr;
-            if(innerNode.type === 'Text') {
+            if (innerNode.type === 'Text') {
               const method = innerNode.val;
               if (!overridableMethods.includes(method.toUpperCase())) {
                 throw new Error(`methodの引数は${overridableMethods.join(',')}のうちの一つです: ${method}`);
               }
               valueAttr = { name: 'value', val: `"${method}"`, mustEscape: true };
-            } else if(innerNode.type === 'Code') {
+            } else if (innerNode.type === 'Code') {
               valueAttr = { name: 'value', val: innerNode.val, mustEscape: false };
             }
 
