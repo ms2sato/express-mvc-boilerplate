@@ -1,22 +1,8 @@
 const { Route } = require('../lib/route');
+const forceLogin = require('../app/middlewares/force_login');
+const forceAdmin = require('../app/middlewares/force_admin');
 
 const route = new Route();
-
-async function forceLogin(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  await req.flash('alert', 'ログインしてください');
-  res.redirect('/login');
-}
-
-async function forceAdmin(req, res, next) {
-  if (req.user.isAdmin()) {
-    return next();
-  }
-  await req.flash('alert', 'アクセスできません');
-  res.redirect('/');
-}
 
 // function style
 route.get('/', function (req, res, _next) {
