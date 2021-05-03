@@ -64,7 +64,7 @@ class TasksController extends Controller {
   async _task(team, id) {
     const tasks = await team.getTasks({ where: { id }, limit: 1 } );
     if(tasks.length === 0) {
-      throw new Error('task not found')
+      throw new Error('task not found');
     }
     return tasks[0];
   }
