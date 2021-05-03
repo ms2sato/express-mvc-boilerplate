@@ -1,14 +1,18 @@
 extends ../layout
 
 block content 
-  h1 Example:create
+  h1 
+    a(href="/examples") Example
+    | / create
 
-  form(action="/examples", method="post")
+  form.box(action="/examples", method="post")
     _csrf
     
     div
-      input(name="title")
+      label(for="title") title
+      input#title(name="title", value=example.body)
     div  
-      textarea(name="body")
-    div
+      label(for="body") body
+      textarea#body(name="body")=example.body
+    div.actions
       input(type="submit")

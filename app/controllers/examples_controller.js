@@ -19,7 +19,8 @@ class ExamplesController extends Controller {
 
   // POST /
   async store(req, res) {
-    // TODO: 新規作成
+    examples.push({ ...req.body, id: index++ });
+    await req.flash('info', '保存しました');
     res.redirect('/examples/');
   }
 
@@ -37,14 +38,14 @@ class ExamplesController extends Controller {
 
   // PUT or PATCH /:id
   async update(req, res) {
-    //const post = examples[req.params.post - 1];
-    // TODO: 編集
+    examples[req.params.example - 1] = { ...examples[req.params.example - 1], ...req.body };
+    await req.flash('info', '更新しました');
     res.redirect(`/examples/${req.params.example}`);
   }
 
   // DELETE /:id
   async destroy(req, res) {
-    // TODO: 削除
+    await req.flash('info', '削除しました（未実装）');
     res.redirect('/examples/');
   }
 }
