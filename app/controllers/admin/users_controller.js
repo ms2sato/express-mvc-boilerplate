@@ -22,6 +22,8 @@ class UsersController extends Controller {
     try {
       let fields = ['provider', 'uid', 'username', 'email', 'displayName', 'accessToken', 'refreshToken', 'role'];
       await user.save({ fields });
+      await req.flash('info', '新規ユーザを作成しました');
+      res.redirect('/admin/users/');
     } catch (err) {
       if (err instanceof ValidationError) {
         res.render('admin/users/create', { user, err });
@@ -29,9 +31,6 @@ class UsersController extends Controller {
         throw err;
       }
     }
-
-    // TODO: 新規作成
-    res.redirect('/admin/users/');
   }
 
   // GET /:id

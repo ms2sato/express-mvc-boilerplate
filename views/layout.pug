@@ -10,8 +10,10 @@ html
         h1 
           a(href="/")= __('AppTitle')
         nav 
-          if currentUser 
+          if(currentUser)
             |  #{currentUser.displayName}&nbsp;
+            if(currentUser.isAdmin())
+              a(href="/admin/users") ユーザー管理（管理者専用）
             a(href="/logout") Logout
           else 
             a(href="/login") Login  
