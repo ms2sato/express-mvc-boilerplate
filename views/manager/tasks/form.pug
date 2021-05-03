@@ -2,20 +2,23 @@ include ../../shared/common
 
 mixin task_form(action, method, task, err)
 
-  form(action!=action, method='post')
+  form.box(action!=action, method='post')
     _csrf
     _method=method
   
     +error_panel(err)
     
     div
-      input(name="title", value!=task.title)
+      label(for="title") タイトル
+      input#title(name="title", value!=task.title)
     div  
-      textarea(name="body")=task.body
+      label(for="body") 内容
+      textarea#body(name="body")=task.body
     div 
-      select(name="assigneeId")
+      label(for="assigneeId") 担当者
+      select#assigneeId(name="assigneeId")
         option(value="", selected=!task.assigneeId) なし
         each user in users 
           option(value=user.id, selected=user.id === task.assigneeId)= user.displayName  
-    div
+    div.actions
       input(type="submit")
