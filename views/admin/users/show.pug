@@ -1,0 +1,26 @@
+extends ../../layout
+
+block content 
+  h1 
+    a(href="/admin/users") ユーザー管理
+    | / #{user.displayName}
+
+  dl
+    dt id
+    dd= user.id
+    dt provider
+    dd= user.provider
+    dt uid
+    dd= user.uid
+    dt username
+    dd= user.username
+    dt email
+    dd= user.email
+    dt displayName
+    dd= user.displayName
+    dt role
+    dd= user.role
+    dt accessToken
+    dd= user.accessToken
+    dt refreshToken
+    dd= user.refreshToken
