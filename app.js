@@ -30,6 +30,7 @@ const methodOverride = require('method-override');
 const csrf = require('csurf');
 const i18n = require('i18n');
 const { flash } = require('express-flash-message');
+const helpers = require('./lib/helpers');
 
 i18n.configure({
   locales: ['ja', 'en'],
@@ -144,6 +145,10 @@ app.use(async (req, res, next) => {
   next();
 });
 
+app.use((req, res, next) => {
+  res.locals.helpers = helpers;
+  next();
+});
 
 const indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');

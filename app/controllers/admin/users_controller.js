@@ -1,13 +1,12 @@
 const { ValidationError } = require('sequelize');
 const Controller = require('../controller');
 const models = require('../../models');
-const helpers = require('../../../lib/helpers');
 
 class UsersController extends Controller {
   // GET /
   async index(req, res) {
     const users = await models.User.findAll({ order: [['id', 'DESC']] });
-    res.render('admin/users/index', { users: users, helpers });
+    res.render('admin/users/index', { users: users });
   }
 
   // GET /create
@@ -36,7 +35,7 @@ class UsersController extends Controller {
   // GET /:id
   async show(req, res) {
     const user = await this._user(req);
-    res.render('admin/users/show', { user, helpers });
+    res.render('admin/users/show', { user });
   }
 
   // GET /:id/edit
