@@ -1,6 +1,7 @@
 const { Route } = require('../lib/route');
 const forceLogin = require('../app/middlewares/force_login');
 const forceAdmin = require('../app/middlewares/force_admin');
+const managableTeam = require('../app/middlewares/managable_team');
 
 const route = new Route();
 
@@ -20,10 +21,10 @@ adminRoute.resource('users', 'admin/users_controller');
 
 {
   // for manager
-  const managerRoute = route.sub('/manager', forceLogin);  
-  managerRoute.resource('teams', 'manager/teams_controller');
-  
-  const teamRoute = managerRoute.sub('/teams/:team');  
+  const managerRoute = route.sub('/manager', forceLogin);
+  managerRoute.resource('teams', managableTeam, 'manager/teams_controller');
+
+  const teamRoute = managerRoute.sub('/teams/:team', managableTeam);
   teamRoute.resource('tasks', { controller: 'manager/tasks_controller', only: ['create', 'store', 'edit', 'update'] });
   teamRoute.resource('members', { controller: 'manager/members_controller', only: ['index', 'store', 'destroy'] });
 }

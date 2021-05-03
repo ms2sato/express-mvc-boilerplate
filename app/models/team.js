@@ -10,6 +10,8 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
+      this.Member = models.Member;
+
       this.Members = this.hasMany(models.Member, {
         foreignKey: 'teamId'
       });
@@ -27,6 +29,15 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'ownerId',
         as: 'owner'
       });
+    }
+
+    async isManager(user) {
+      return await this.countMembers({
+        where: {
+          '$Member.role$': this.constructor.Member.roles.manager,
+          '$Member.userId$': user.id
+        }
+      }) != 0;
     }
   }
   Team.init({
