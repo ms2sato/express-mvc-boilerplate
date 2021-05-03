@@ -4,8 +4,8 @@ module.exports = {
   up: async (queryInterface, _Sequelize) => {
     return queryInterface.bulkInsert('Tasks', [{
       teamId: 1,
-      creatorId: 1,
-      assigneeId: 2,
+      creatorId: 2,
+      assigneeId: 3,
       title: 'タスク1',
       body: 'タスク1の本文',
       status: 0,
@@ -13,8 +13,8 @@ module.exports = {
       updatedAt: new Date()
     }, {
       teamId: 1,
-      creatorId: 1,
-      assigneeId: 2,
+      creatorId: 2,
+      assigneeId: 3,
       title: 'タスク2',
       body: 'タスク2の本文',
       status: 1,
@@ -22,7 +22,7 @@ module.exports = {
       updatedAt: new Date()
     }, {
       teamId: 1,
-      creatorId: 1,
+      creatorId: 2,
       assigneeId: null,
       title: 'タスク3',
       body: 'タスク3の本文',
@@ -31,8 +31,8 @@ module.exports = {
       updatedAt: new Date()
     }, {
       teamId: 1,
-      creatorId: 1,
-      assigneeId: 1,
+      creatorId: 2,
+      assigneeId: 2,
       title: 'タスク4',
       body: 'タスク4の本文',
       status: 0,
@@ -40,7 +40,7 @@ module.exports = {
       updatedAt: new Date()
     }, {
       teamId: 2,
-      creatorId: 1,
+      creatorId: 2,
       assigneeId: null,
       title: 'タスク5',
       body: 'タスク5の本文',
@@ -49,8 +49,8 @@ module.exports = {
       updatedAt: new Date()
     }, {
       teamId: 2,
-      creatorId: 1,
-      assigneeId: 2,
+      creatorId: 2,
+      assigneeId: 3,
       title: 'タスク6',
       body: 'タスク6の本文',
       status: 0,
