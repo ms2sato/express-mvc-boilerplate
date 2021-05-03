@@ -3,6 +3,8 @@ extends ../../layout
 include ./form
 
 block content 
-  h1 タスクの新規作成
+  h1 
+    a(href=`/manager/teams/${team.id}`)=team.name  
+    | / タスクの新規作成
 
   +task_form(`/manager/teams/${team.id}/tasks`, 'post', task, err)

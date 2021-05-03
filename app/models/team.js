@@ -22,6 +22,7 @@ module.exports = (sequelize, DataTypes) => {
 
       this.Users = this.belongsToMany(models.User, {
         through: 'Member',
+        otherKey: 'userId',
         foreignKey: 'teamId'
       });
 

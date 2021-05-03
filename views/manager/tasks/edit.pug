@@ -3,6 +3,8 @@ extends ../../layout
 include ./form
 
 block content 
-  h1 タスクの編集
+  h1 
+    a(href=`/manager/teams/${team.id}`)=team.name  
+    | / タスクの編集
 
   +task_form(`/manager/teams/${team.id}/tasks/${task.id}`, 'put', task, err)

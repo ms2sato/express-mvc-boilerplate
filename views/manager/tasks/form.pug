@@ -12,5 +12,10 @@ mixin task_form(action, method, task, err)
       input(name="title", value!=task.title)
     div  
       textarea(name="body")=task.body
+    div 
+      select(name="assigneeId")
+        option(value="", selected=!task.assigneeId) なし
+        each user in users 
+          option(value=user.id, selected=user.id === task.assigneeId)= user.displayName  
     div
       input(type="submit")

@@ -17,7 +17,8 @@ module.exports = (sequelize, DataTypes) => {
 
       this.Teams = this.belongsToMany(models.Team, {
         through: 'Member',
-        foreignKey: 'teamId'
+        otherKey: 'teamId',
+        foreignKey: 'userId'
       });
 
       this.OwnTeams = this.hasMany(models.Team, {
