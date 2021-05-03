@@ -20,6 +20,6 @@ block content
           td= task.team.name
           td= task.id
           td= task.title
-          td= task.createdAt
+          td= helpers.formatDateTime(task.createdAt)
           td
             a(href=`/tasks/${task.id}`) 詳細

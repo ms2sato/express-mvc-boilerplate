@@ -32,7 +32,7 @@ block content
         div= comment.message
         div= comment.kind
         div= comment.creator.displayName
-        div= comment.createdAt
+        div= helpers.formatDateTime(comment.createdAt)
 
   form(action=`/tasks/${task.id}/comments`, method="post")
     _csrf

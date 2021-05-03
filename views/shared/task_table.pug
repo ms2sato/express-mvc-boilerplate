@@ -17,7 +17,7 @@ mixin task_table(tasks)
           td= task.status
           td= task.title
           td= (task.assignee) ? task.assignee.displayName : 'なし'
-          td= task.createdAt
+          td= helpers.formatDateTime(task.createdAt)
           td
             a(href=`/tasks/${task.id}`) 詳細
               

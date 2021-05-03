@@ -27,7 +27,7 @@ block content
             td= team.id
             td= team.name
             td= member.role
-            td= member.createdAt
+            td= helpers.formatDateTime(member.createdAt)
             td
               - if(member.isManager())
                 a(href=`/manager/teams/${team.id}`) 管理
