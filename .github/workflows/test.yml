@@ -2,9 +2,9 @@ name: jest
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, master ]
   pull_request:
-    branches: [ master ]
+    branches: [ main, master ]
 
 env:
   NODE_ENV: test
@@ -51,6 +51,7 @@ jobs:
             ${{ runner.OS }}-          
       - run: npm install
       - run: npm run build --if-present
+      - run: npm run lint
       - run: npm test
       - name: Run test
         uses: mattallty/jest-github-action@v1.0.3

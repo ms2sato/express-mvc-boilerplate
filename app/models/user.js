@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
 
     static async signIn(params) {
       const user = await this.findOne({ where: { provider: params.provider, uid: params.uid } });
-      if(user) {
+      if (user) {
         user.username = params.username;
         user.accessToken = params.accessToken;
         user.refreshToken = params.refreshToken;
@@ -25,57 +25,87 @@ module.exports = (sequelize, DataTypes) => {
         return await this.create(params);
       }
     }
+
+    isAdmin() {
+      return this.role === this.constructor.roles.admin;
+    }
   }
+  User.roles = { normal: 0, admin: 1 };
   User.init({
     provider: {
       type: DataTypes.STRING,
       validate: {
-        notEmpty: true
+        notEmpty: {
+          msg: 'providerは必須です'
+        }
       }
     },
     uid: {
       type: DataTypes.STRING,
       validate: {
-        notEmpty: true
+        notEmpty: {
+          msg: 'uidは必須です'
+        }
       }
     },
     username: {
       type: DataTypes.STRING,
       validate: {
-        notEmpty: true
+        notEmpty: {
+          msg: 'usernameは必須です'
+        }
       }
     },
-    email:  {
+    email: {
       type: DataTypes.STRING,
       validate: {
-        isEmail: true,
-        notEmpty: true
+        isEmail: {
+          msg: 'フォーマットがEmailとして認められません'
+        },
+        notEmpty: {
+          msg: 'emailは必須です'
+        }
       }
     },
-    displayName:  {
+    displayName: {
       type: DataTypes.STRING,
       validate: {
         notEmpty: {
-          msg: 'displayNameは空ではいけません'
+          msg: '表示名は必須です'
         },
-        len: { 
-          msg: 'displayNameは3文字以上24文字未満です',
+        len: {
+          msg: '表示名は3文字以上24文字未満です',
           args: [3, 24]
         }
       }
     },
-    accessToken:  {
-      type: DataTypes.TEXT,
+    role: {
+      type: DataTypes.INTEGER,
+      notNull: false,
       validate: {
-        notEmpty: true
+        notEmpty: {
+          msg: '役割は必須です'
+        },
+        isIn: {
+          msg: `役割は${Object.values(User.roles).join(',')}のいずれかです`,
+          args: [Object.values(User.roles)]
+        }
       }
     },
-    refreshToken:  {
+    accessToken: {
+      type: DataTypes.TEXT,
+      validate: {
+        notEmpty: {
+          msg: 'アクセストークンは必須です'
+        }
+      }
+    },
+    refreshToken: {
       type: DataTypes.TEXT
     },
   }, {
     sequelize,
     modelName: 'User',
-  });
+  });  
   return User;
 };

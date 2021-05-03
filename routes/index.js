@@ -23,6 +23,6 @@ route.resource('examples', 'examples_controller');
 
 // /adminのURL階層の作成。ログインチェックが有効。
 const adminRoute = route.sub('/admin', forceLogin);
-adminRoute.get('/test', 'users_controller@edit');
+adminRoute.resource('users', 'admin/users_controller');
 
 module.exports = route.router;

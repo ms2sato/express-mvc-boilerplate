@@ -1,5 +1,3 @@
-const debug = require('../../lib/logger').extend('examples_controller');
-
 const Controller = require('./controller');
 
 let index = 1;
@@ -11,13 +9,11 @@ const examples = [
 class ExamplesController extends Controller {
   // GET /
   async index(req, res) {
-    debug(req.params);
     res.render('examples/index', { examples: examples });
   }
 
   // GET /create
   async create(req, res) {
-    debug(req.params);
     res.render('examples/create', { example: { title: '', body: '' } });
   }
 
@@ -29,21 +25,18 @@ class ExamplesController extends Controller {
 
   // GET /:id
   async show(req, res) {
-    debug(req.params);
     const example = examples[req.params.example - 1];
     res.render('examples/show', { example });
   }
 
   // GET /:id/edit
   async edit(req, res) {
-    debug(req.params);
     const example = examples[req.params.example - 1];
     res.render('examples/edit', { example });
   }
 
   // PUT or PATCH /:id
   async update(req, res) {
-    debug(req.params);
     //const post = examples[req.params.post - 1];
     // TODO: 編集
     res.redirect(`/examples/${req.params.example}`);
@@ -51,7 +44,6 @@ class ExamplesController extends Controller {
 
   // DELETE /:id
   async destroy(req, res) {
-    debug(req.params);
     // TODO: 削除
     res.redirect('/examples/');
   }

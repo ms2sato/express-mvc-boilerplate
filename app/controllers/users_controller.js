@@ -1,17 +1,13 @@
-const debug = require('../../lib/logger').extend('users_controller');
-
 const { ValidationError } = require('sequelize');
 const Controller = require('./controller');
 
 class UsersController extends Controller {
   edit(req, res) {
-    debug(req.params);
     const user = req.user;
     res.render('users/edit', { user });
   }
 
   async update(req, res) {
-    debug(req.body);
     const user = req.user;
     try {
       user.displayName = req.body.displayName;  
