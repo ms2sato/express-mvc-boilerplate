@@ -29,7 +29,7 @@ if (process.env.NODE_ENV !== 'production') {
   passport.use(new LocalStrategy(
     async (username, password, done) => {
       // [caution!] あくまでダミーユーザー用なのでパスワードチェックはしない
-      const user = await models.User.findOne({ username: username });
+      const user = await models.User.findOne({ where: { username: username } });
       console.log(user);
       if (!user) {
         return done(null, false, { message: 'Incorrect username.' });
