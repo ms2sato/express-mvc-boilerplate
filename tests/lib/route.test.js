@@ -1,4 +1,4 @@
-const { Route, setControllerRoot } = require('../../lib/route');
+const { Route, BaseController, setControllerRoot } = require('../../lib/route');
 const express = require('express');
 
 Route.checkControllerRoot = () => {
@@ -354,6 +354,91 @@ describe('#resource', () => {
     expect(getProcess.mock.calls).toHaveLength(2);
     expect(getProcess.mock.calls[0][0]).toBe('index');
     expect(getProcess.mock.calls[1][0]).toBe('destroy');
+  });
+});
+
+test('Controller not have getProcess', () => {
+  class DummyController {
+    execute() { }
+  }
+
+  const requireController = jest.fn(() => { });
+  requireController.mockReturnValueOnce(DummyController);
+  const route = new Route();
+  route.requireController = requireController;
+
+  expect(() => route.get('/test/action', 'example_controller@execute')).toThrow(
+    "example_controllerにgetProcess関数がありません。基底のControllerを継承していない可能性があります"
+  );
+});
+
+describe('errors', () => {
+  test('Controller not have action', () => {
+    class DummyController extends BaseController {
+      // no actions
+    }
+
+    const requireController = jest.fn(() => { });
+    requireController.mockReturnValueOnce(DummyController);
+    const route = new Route();
+    route.requireController = requireController;
+
+    expect(() => route.get('/test/action', 'example_controller@execute')).toThrow(
+      `example_controllerに指定のactionがありません: execute`
+    );
+  });
+
+  test('Controller file not found', () => {
+    const route = new Route();
+    expect(() => route.get('/test/action', 'example_controller@execute')).toThrow(
+      `Controllerファイルが見つかりませんでした: @/app/controllers/example_controller.js`
+    );
+  });
+
+  test('Unexpected controller@action format', () => {
+    class DummyController {
+      execute() { }
+    }
+
+    const requireController = jest.fn(() => { });
+    requireController.mockReturnValueOnce(DummyController);
+    const route = new Route();
+    route.requireController = requireController;
+
+    expect(() => route.get('/test/action', 'example_controller#execute')).toThrow(
+      "actionのフォーマットはクラスファイル名@メソッド名です。「@」が入っていません: example_controller#execute"
+    );
+  });
+
+  test('cannot parse controllerPath', () => {
+    class DummyController extends BaseController {
+      index() { }
+    }
+
+    const requireController = jest.fn(() => { });
+    requireController.mockReturnValue(DummyController);
+    const route = new Route();
+    route.requireController = requireController;
+
+    expect(() => route.resource('resources', { only: ['index'] })).toThrow(
+      'controller が指定されていません: {"only":["index"]}'
+    );
+  });
+
+  test('only invalid actions', () => {
+    class DummyController extends BaseController {
+      index() { }
+      destroy() { }
+    }
+
+    const requireController = jest.fn(() => { });
+    requireController.mockReturnValue(DummyController);
+    const route = new Route();
+    route.requireController = requireController;
+
+    expect(() => route.resource('resources', { controller: 'example_controller', only: ['index', 'delete', 'test'] })).toThrow(
+      'onlyには create,edit,show,index,store,update,destroy が指定できます。: delete,test'
+    );
   });
 });
 
