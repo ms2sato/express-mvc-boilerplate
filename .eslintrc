@@ -86,6 +86,7 @@
       {
         "argsIgnorePattern": "^_"
       }
-    ]
+    ],
+    "jest/no-done-callback": "off"
   }
 }

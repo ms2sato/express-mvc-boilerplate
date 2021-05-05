@@ -30,7 +30,6 @@ if (process.env.NODE_ENV !== 'production') {
     async (username, password, done) => {
       // [caution!] あくまでダミーユーザー用なのでパスワードチェックはしない
       const user = await models.User.findOne({ where: { username: username } });
-      console.log(user);
       if (!user) {
         return done(null, false, { message: 'Incorrect username.' });
       }
@@ -47,27 +46,29 @@ if (process.env.NODE_ENV !== 'production') {
   );
 }
 
-passport.use(new GitHubStrategy(gitHubConfig, async (accessToken, refreshToken, profile, done) => {
-  const user = await models.User.signIn({
-    provider: profile.provider,
-    uid: profile.id,
-    username: profile.username,
-    displayName: profile.displayName || profile.username,
-    email: profile.emails[0].value,
-    accessToken,
-    refreshToken
-  });
-  done(null, user);
-}));
+if (process.env.NODE_ENV !== 'test') {
+  passport.use(new GitHubStrategy(gitHubConfig, async (accessToken, refreshToken, profile, done) => {
+    const user = await models.User.signIn({
+      provider: profile.provider,
+      uid: profile.id,
+      username: profile.username,
+      displayName: profile.displayName || profile.username,
+      email: profile.emails[0].value,
+      accessToken,
+      refreshToken
+    });
+    done(null, user);
+  }));
 
-router.get('/auth/github', passport.authenticate('github', { scope: ['user:email'] }));
+  router.get('/auth/github', passport.authenticate('github', { scope: ['user:email'] }));
 
-router.get(gitHubConfig.callbackURL,
-  passport.authenticate('github', { failureRedirect: 'login' }),
-  (req, res) => {
-    res.redirect('/');
-  }
-);
+  router.get(gitHubConfig.callbackURL,
+    passport.authenticate('github', { failureRedirect: 'login' }),
+    (req, res) => {
+      res.redirect('/');
+    }
+  );
+}
 
 router.get('/login', (req, res, _next) => {
   res.render('login', { user: req.user });
