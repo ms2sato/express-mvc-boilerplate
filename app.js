@@ -31,6 +31,7 @@ const csrf = require('csurf');
 const i18n = require('i18n');
 const { flash } = require('express-flash-message');
 const helpers = require('./lib/helpers');
+const debug = require('debug')('express-mvc:request:params');
 
 i18n.configure({
   locales: ['ja', 'en'],
@@ -149,6 +150,16 @@ app.use(async (req, res, next) => {
 
 app.use((req, res, next) => {
   res.locals.helpers = helpers;
+  next();
+});
+
+app.use((req, res, next) => {
+  debug(`${req.method} ${req.path}`);
+  if (debug.enabled) {
+    debug(`req.params: %o`, req.params);
+    debug(`req.body: %o`, req.body);
+    debug(`req.query: %o`, req.query);
+  }
   next();
 });
 
