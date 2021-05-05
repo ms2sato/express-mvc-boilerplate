@@ -19,7 +19,7 @@ block content
     dt displayName
     dd= user.displayName
     dt role
-    dd= user.role
+    dd= __(`models.User.roles.${user.role}`)
     dt accessToken
     dd= user.accessToken
     dt refreshToken

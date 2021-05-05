@@ -30,7 +30,6 @@ if (process.env.NODE_ENV !== 'production') {
     async (username, password, done) => {
       // [caution!] あくまでダミーユーザー用なのでパスワードチェックはしない
       const user = await models.User.findOne({ where: { username: username } });
-      console.log(user);
       if (!user) {
         return done(null, false, { message: 'Incorrect username.' });
       }

@@ -129,12 +129,14 @@ app.use(methodOverride(function (req, _res) {
 
 app.use(methodOverride('_method', { methods: ['GET', 'POST'] })); // for GET Parameter
 
-app.use(csrf());
-app.use((req, res, next) => {
-  const csrfToken = req.csrfToken();
-  res.locals.csrfToken = csrfToken;
-  next();
-});
+if (process.env.NODE_ENV !== 'test') {
+  app.use(csrf({ httpOnly: true }));
+  app.use((req, res, next) => {
+    const csrfToken = req.csrfToken();
+    res.locals.csrfToken = csrfToken;
+    next();
+  });
+}
 
 app.use(flash({ sessionKeyName: '_flashMessage' }));
 app.use(async (req, res, next) => {
