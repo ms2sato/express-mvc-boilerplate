@@ -8,10 +8,16 @@ const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../../config/database.js')[env];
 const db = {};
 
-if(env !== 'production') {
+if (env !== 'production') {
   const debug = require('debug')('express-mvc:sql');
   config.logging = (args) => {
-    debug(args);
+    if (
+      !args.includes('DELETE FROM "Session" WHERE "expires" <') &&
+      !args.includes('UPDATE "Session" SET "expires"') &&
+      !args.includes('SELECT "sid", "expires", "data", "createdAt", "updatedAt" FROM "Session" AS')
+    ) {
+      debug(args);
+    }
   };
 }
 
