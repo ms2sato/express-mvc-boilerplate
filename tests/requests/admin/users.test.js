@@ -38,7 +38,9 @@ afterAll(async (done) => {
 describe('access controll', () => {
   describe('when not logged in', () => {
     test('should redirect to /login', async () => {
-      const res = await agent(app).get('/admin/users').expect(302);
+      const res = await agent(app).get('/admin/users');
+      console.log(res);
+      await res.expect(302);
       expect(res.headers.location).toBe('/login');
     });
   });
