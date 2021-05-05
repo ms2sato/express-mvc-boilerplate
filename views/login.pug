@@ -2,10 +2,10 @@ extends layout
 
 block content 
   a(href="/auth/github") GitHubでログイン
-  if user 
+  if(user)
     p 現在 #{user.username} でログイン中
 
-  if process.env.NODE_ENV !== 'production'
+  if(process.env.NODE_ENV !== 'production' || process.env.FORCE_DUMMY_LOGIN)
     h2 ダミーログイン
     form(action="/login" method="post")
       _csrf
