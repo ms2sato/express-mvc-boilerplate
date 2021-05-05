@@ -16,13 +16,16 @@ module.exports = (sequelize, DataTypes) => {
     static async signIn(params) {
       const user = await this.findOne({ where: { provider: params.provider, uid: params.uid } });
       if (user) {
-        user.username = params.username;
-        user.accessToken = params.accessToken;
-        user.refreshToken = params.refreshToken;
+        user.set({
+          username: params.username,
+          accessToken: params.accessToken,
+          refreshToken: params.refreshToken
+        });
         await user.save();
         return user;
       } else {
-        return await this.create(params);
+        const fields = ['provider', 'uid', 'username', 'displayName', 'email', 'accessToken', 'refreshToken'];
+        return await this.create(params, { fields });
       }
     }
 
@@ -34,6 +37,7 @@ module.exports = (sequelize, DataTypes) => {
   User.init({
     provider: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
         notEmpty: {
           msg: 'providerは必須です'
@@ -42,6 +46,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     uid: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
         notEmpty: {
           msg: 'uidは必須です'
@@ -50,6 +55,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     username: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
         notEmpty: {
           msg: 'usernameは必須です'
@@ -58,6 +64,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     email: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
         isEmail: {
           msg: 'フォーマットがEmailとして認められません'
@@ -69,6 +76,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     displayName: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
         notEmpty: {
           msg: '表示名は必須です'
@@ -81,7 +89,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     role: {
       type: DataTypes.INTEGER,
-      notNull: false,
+      allowNull: false,
+      defaultValue: User.roles.normal,
       validate: {
         notEmpty: {
           msg: '役割は必須です'
@@ -94,6 +103,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     accessToken: {
       type: DataTypes.TEXT,
+      allowNull: false,
       validate: {
         notEmpty: {
           msg: 'アクセストークンは必須です'
@@ -106,6 +116,6 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'User',
-  });  
+  });
   return User;
 };
