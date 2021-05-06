@@ -20,6 +20,10 @@ module.exports = (sequelize, DataTypes) => {
         as: 'creator'
       });
     }
+
+    isFinished() {
+      return this.kind === this.constructor.kinds.finished;
+    }
   }
   Comment.init({
     message: {
@@ -40,6 +44,6 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'Comment',
   });
 
-  Comment.statuses = { normal: 0, finished: 1 };
+  Comment.kinds = { normal: 0, finished: 1 };
   return Comment;
 };

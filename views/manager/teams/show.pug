@@ -25,7 +25,7 @@ block content
       each task in tasks
         tr
           td= task.id
-          td= task.status
+          td= __(`models.Task.statuses.${task.status}`)
           td= task.title
           td= (task.assignee) ? task.assignee.displayName : 'なし'
           td= helpers.formatDateTime(task.createdAt)

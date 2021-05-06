@@ -58,7 +58,7 @@ module.exports = (sequelize, DataTypes) => {
         await Task.Comment.create({
           taskId: this.id,
           creatorId: user.id,
-          kind: Task.Comment.statuses.finished,
+          kind: Task.Comment.kinds.finished,
           message
         }, { transaction: t });
       });

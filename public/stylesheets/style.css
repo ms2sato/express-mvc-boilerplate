@@ -50,3 +50,17 @@ header>nav {
 .actions {
   text-align: right;
 }
+
+ul.comments {
+  list-style: none;
+  padding: 0;  
+}
+
+ul.comments li {
+  border-bottom: solid 1px lightgray;
+  margin-bottom: 1em;
+}
+
+ul.comments li.finished {
+  background-color: lightpink;
+}

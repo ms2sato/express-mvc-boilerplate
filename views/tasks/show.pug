@@ -4,47 +4,46 @@ include ../shared/common
 
 block content 
   h1 
-    span=team.name
+    - if(isManager)
+      a(href=`/manager/teams/${team.id}`)= team.name
+    - else
+      span=team.name
     span &nbsp;/&nbsp;
     span=task.title
 
   - if(isManager)
-    div
-      p マネージャ操作
+    div.actions
+      em マネージャ操作: 
       - if(task.isFinished())
         a(href=`/manager/teams/${team.id}/tasks/${task.id}/archived?_method=put&_csrf=${csrfToken}`) アーカイブする
       - else if(task.isArchived())
         | アーカイブ済み
 
-  dl
-    dt title
-    dd= task.title
-    dt body
-    dd= task.body
+  h2 内容
+  div!= helpers.formatLines(task.body)
 
   +error_panel(err)
 
   h2 コメント
 
-  ul
+  ul.comments
     each comment in comments
-      li
-        div= comment.message
-        div= comment.kind
-        div= comment.creator.displayName
-        div= helpers.formatDateTime(comment.createdAt)
+      li(class= comment.isFinished() ? 'finished' : 'normal' )
+        div!= helpers.formatLines(comment.message)
+        div #{helpers.formatDateTime(comment.createdAt)} #{comment.creator.displayName} #{ __(`models.Comment.kinds.${comment.kind}`) }
 
-  form(action=`/tasks/${task.id}/comments`, method="post")
+  form.box(action=`/tasks/${task.id}/comments`, method="post")
     _csrf
 
-    p メッセージ
-    textarea(name="message", cols="30", rows="5") 
+    label(for="message") メッセージ<br>
+    textarea#message(name="message", cols="50", rows="5") 
 
-    - if(task.isNotStarted())
-      p 完了報告
-      input(type="checkbox", name="finished")
-    - else
-      p 既に完了報告済みです
+    .actions
+      - if(task.isNotStarted())
+        div
+          label(for="finished") 完了報告
+          input#finished(type="checkbox", name="finished")
+      - else
+        div 既に完了報告済みです
 
-    div
       input(type="submit", value="送信")

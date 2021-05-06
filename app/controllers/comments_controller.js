@@ -12,22 +12,21 @@ class CommentsController extends Controller {
 
     // TODO: ログインしていなければ投稿できない？
     const task = await models.Task.findByPk(req.params.task);
-    if(!task) {
+    if (!task) {
       throw new Error('task not found');
     }
 
     try {
 
-      if(req.body.finished) {
+      if (req.body.finished) {
         await task.finish(req.body.message, req.user);
         await req.flash('info', '完了報告しました');
       } else {
-        // TODO: もっと良い書き方はありそう
-        const comment = models.Comment.build(req.body);
-        comment.taskId = task.id;
-        comment.creatorId = req.user.id;
-        comment.status = models.Comment.statuses.normal;
-        await comment.save( { fields: ['status', 'message', 'taskId', 'creatorId'] });
+        const fields = ['kind', 'message', 'taskId', 'creatorId'];
+        await models.Comment.create(
+          { ...req.body, taskId: task.id, creatorId: req.user.id },
+          { fields }
+        );
         await req.flash('info', 'コメントしました');
       }
       res.redirect(`/tasks/${task.id}`);

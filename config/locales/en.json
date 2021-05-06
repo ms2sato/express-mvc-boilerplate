@@ -9,6 +9,25 @@
 				"0": "Normal",
 				"1": "Admin"
 			}
+		},
+		"Comment": {
+			"kinds": {
+				"0": "Normal",
+				"1": "Finished"
+			}
+		},
+		"Task": {
+			"statuses": {
+				"0": "NotFinished",
+				"1": "Finished",
+				"2": "Archived"
+			}
+		},
+		"Member": {
+			"roles": {
+				"0": "Normal",
+				"1": "Manager"
+			}
 		}
 	}
 }
