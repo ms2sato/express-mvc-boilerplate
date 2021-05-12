@@ -9,7 +9,7 @@ const models = require('../app/models');
 const gitHubConfig = {
   clientID: process.env.GITHUB_CLIENT_ID,
   clientSecret: process.env.GITHUB_CLIENT_SECRET,
-  callbackURL: '/auth/github/callback'
+  callbackURL: `${process.env.OAUTH_CALLBACK_HOST}/auth/github/callback`
 };
 
 passport.serializeUser((user, done) => {
