@@ -6,10 +6,12 @@ const GitHubStrategy = require('passport-github2').Strategy;
 
 const models = require('../app/models');
 
+const callbackPath = '/auth/github/callback';
+
 const gitHubConfig = {
   clientID: process.env.GITHUB_CLIENT_ID,
   clientSecret: process.env.GITHUB_CLIENT_SECRET,
-  callbackURL: `${process.env.OAUTH_CALLBACK_HOST}/auth/github/callback`
+  callbackURL: `${process.env.OAUTH_CALLBACK_HOST}${callbackPath}`
 };
 
 passport.serializeUser((user, done) => {
@@ -62,7 +64,7 @@ if (process.env.NODE_ENV !== 'test') {
 
   router.get('/auth/github', passport.authenticate('github', { scope: ['user:email'] }));
 
-  router.get(gitHubConfig.callbackURL,
+  router.get(callbackPath,
     passport.authenticate('github', { failureRedirect: 'login' }),
     (req, res) => {
       res.redirect('/');
