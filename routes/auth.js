@@ -25,7 +25,7 @@ passport.deserializeUser(async (userId, done) => {
   done(null, user);
 });
 
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV !== 'production' || process.env.FORCE_DUMMY_LOGIN) {
   passport.use(new LocalStrategy(
     async (username, password, done) => {
       // [caution!] あくまでダミーユーザー用なのでパスワードチェックはしない
