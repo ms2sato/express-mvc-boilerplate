@@ -1,39 +1,6 @@
-# 準備
-```
-bin/db/reset
-```
+# これはなんですか？
+WEBのMVCフレームワークを学習する為の、Express + Sequelize で構築したのBoilerplateです。
+開発に便利な幾つかの機能を組み込んであります。
 
-# TEST準備
-
-```
-bin/db/test_reset
-```
-
-
-# 参考情報
-## dotenv
-
-## Sequelize
-### migration
-https://sequelize.org/master/manual/migrations.html
-
-migrationファイルの雛形を作る
-```
-npx sequelize-cli model:generate --name User --attributes provider:string,uid:string,username:string,email:string,displayName:string
-```
-
-```
-npx sequelize-cli db:migrate
-```
-
-seedの雛形を作る
-```
-npx sequelize-cli seed:generate --name demo-user
-```
-
-## Routes
-resourceの解説必要
-
-# VSCode
-- eslint
-- puglint
+独自の内容としてLaravelライクなクラス形式のControllerを利用できるようにしているので、このBoilerplateで学習することによりMVCフレームワーク全般の基礎知識が得られることが目的です。
+細かい仕様や資料は別途提供されますので、そちらを参照ください。
