@@ -5,7 +5,7 @@ module.exports = async function managableTeam(req, res, next) {
 
   const team = await models.Team.findByPk(req.params.team);
   if (!team) {
-    next(new Error('team not found'));
+    return next(new Error('team not found'));
   }
 
   if (!await team.isManager(user)) {
