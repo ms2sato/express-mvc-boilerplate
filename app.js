@@ -103,8 +103,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+const sessionSecret = process.env.SESSION_SECRET || (process.env.NODE_ENV === 'test' ? 'SECRET' : null);
+if(!sessionSecret) {
+  throw new Error('[ERROR]Require environment value of SESSION_SECRET!');
+}
 app.use(session({
-  secret: process.env.SESSION_SECRET,
+  secret: sessionSecret,
   store: store,
   resave: false,
   saveUninitialized: false
@@ -178,6 +183,8 @@ app.use(function (err, req, res, _next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+  console.warn(err);
 
   // render the error page
   res.status(err.status || 500);
