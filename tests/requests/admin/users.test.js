@@ -5,7 +5,7 @@ const { login, agent } = require('../../../tests/support/request_helper');
 let admin;
 let user1;
 
-beforeAll(async (done) => {
+beforeAll(async () => {
   await models.User.sync({ force: true });
 
   admin = await models.User.create({
@@ -26,13 +26,10 @@ beforeAll(async (done) => {
     email: 'user1@example.com',
     accessToken: 'accessToken'
   });
-
-  done();
 });
 
-afterAll(async (done) => {
+afterAll(async () => {
   await models.sequelize.close();
-  done();
 });
 
 describe('access controll', () => {

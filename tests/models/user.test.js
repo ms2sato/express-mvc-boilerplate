@@ -1,13 +1,11 @@
 const models = require('../../app/models');
 
-beforeAll(async done => {
+beforeAll(async () => {
   await models.User.sync({ force: true });
-  done();
 });
 
-afterAll(async done => {
+afterAll(async () => {
   await models.sequelize.close();
-  done();
 });
 
 describe('#isAdmin', () => {
