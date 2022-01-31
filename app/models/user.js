@@ -13,22 +13,6 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
 
-    static async signIn(params) {
-      const user = await this.findOne({ where: { provider: params.provider, uid: params.uid } });
-      if (user) {
-        user.set({
-          username: params.username,
-          accessToken: params.accessToken,
-          refreshToken: params.refreshToken
-        });
-        await user.save();
-        return user;
-      } else {
-        const fields = ['provider', 'uid', 'username', 'displayName', 'email', 'accessToken', 'refreshToken'];
-        return await this.create(params, { fields });
-      }
-    }
-
     isAdmin() {
       return this.role === this.constructor.roles.admin;
     }
