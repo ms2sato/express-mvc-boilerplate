@@ -8,10 +8,6 @@ block content
   dl
     dt id
     dd= user.id
-    dt provider
-    dd= user.provider
-    dt uid
-    dd= user.uid
     dt username
     dd= user.username
     dt email
@@ -20,10 +16,6 @@ block content
     dd= user.displayName
     dt role
     dd= __(`models.User.roles.${user.role}`)
-    dt accessToken
-    dd= user.accessToken
-    dt refreshToken
-    dd= user.refreshToken
     dt createdAt
     dd= helpers.formatDateTime(user.createdAt)
     dt updatedAt

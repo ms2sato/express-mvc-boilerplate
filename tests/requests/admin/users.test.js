@@ -9,22 +9,16 @@ beforeAll(async () => {
   await models.User.sync({ force: true });
 
   admin = await models.User.create({
-    provider: 'local',
-    uid: 'admin',
     username: 'admin',
     displayName: 'Admin',
     email: 'admin@example.com',
-    accessToken: 'accessToken',
     role: models.User.roles.admin
   });
 
   user1 = await models.User.create({
-    provider: 'local',
-    uid: 'user1',
     username: 'user1',
     displayName: 'User1',
     email: 'user1@example.com',
-    accessToken: 'accessToken'
   });
 });
 
@@ -111,12 +105,9 @@ describe('access by admin', () => {
         const res = await agnt
           .post('/admin/users')
           .send({
-            provider: 'local',
-            uid: 'admin2',
             username: 'admin2',
             displayName: 'Admin2',
             email: 'admin2@example.com',
-            accessToken: 'accessToken',
             role: models.User.roles.admin
           })
           .expect(302);
@@ -140,12 +131,9 @@ describe('access by admin', () => {
         const res = await agnt
           .put(`/admin/users/${admin2.id}`)
           .send({
-            provider: 'local',
-            uid: 'admin2-edit',
             username: 'admin2-edit',
             displayName: 'Admin2-edit',
             email: 'admin2-edit@example.com',
-            accessToken: 'accessToken',
             role: models.User.roles.normal
           })
           .expect(302);

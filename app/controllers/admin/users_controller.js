@@ -19,7 +19,7 @@ class UsersController extends Controller {
   async store(req, res) {
     const user = models.User.build(req.body);
     try {
-      let fields = ['provider', 'uid', 'username', 'email', 'displayName', 'accessToken', 'refreshToken', 'role'];
+      let fields = ['username', 'email', 'displayName', 'role'];
       await user.save({ fields });
       await req.flash('info', '新規ユーザを作成しました');
       res.redirect('/admin/users/');
@@ -50,7 +50,7 @@ class UsersController extends Controller {
     try {
       user.set(req.body);
 
-      let fields = ['provider', 'uid', 'username', 'email', 'displayName', 'accessToken', 'refreshToken'];
+      let fields = ['username', 'email', 'displayName'];
       if (user.id !== req.user.id) {
         fields = [...fields, 'role'];
       }

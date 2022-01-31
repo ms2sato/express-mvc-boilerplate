@@ -10,14 +10,10 @@ block content
     thead 
       tr 
         th id 
-        th provider 
-        th uid
         th username 
         th email 
         th displayName 
         th role 
-        th accessToken 
-        th refreshToken 
         th createdAt 
         th updatedAt
         th actions
@@ -25,14 +21,10 @@ block content
       each user in users
         tr
           td= user.id
-          td= user.uid
-          td= user.provider 
           td= user.username
           td= user.email
           td= user.displayName 
           td= __(`models.User.roles.${user.role}`)
-          td= user.accessToken
-          td= user.refreshToken 
           td= helpers.formatDateTime(user.createdAt)
           td= helpers.formatDateTime(user.updatedAt)
           td

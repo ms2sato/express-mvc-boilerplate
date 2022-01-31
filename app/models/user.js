@@ -19,24 +19,6 @@ module.exports = (sequelize, DataTypes) => {
   }
   User.roles = { normal: 0, admin: 1 };
   User.init({
-    provider: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: {
-          msg: 'providerは必須です'
-        }
-      }
-    },
-    uid: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: {
-          msg: 'uidは必須です'
-        }
-      }
-    },
     username: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -84,18 +66,6 @@ module.exports = (sequelize, DataTypes) => {
           args: [Object.values(User.roles)]
         }
       }
-    },
-    accessToken: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-      validate: {
-        notEmpty: {
-          msg: 'アクセストークンは必須です'
-        }
-      }
-    },
-    refreshToken: {
-      type: DataTypes.TEXT
     },
   }, {
     sequelize,
