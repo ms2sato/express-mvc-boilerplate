@@ -6,8 +6,6 @@ let admin;
 let user1;
 
 beforeAll(async () => {
-  await models.User.sync({ force: true });
-
   admin = await models.User.create({
     provider: 'local',
     uid: 'admin',

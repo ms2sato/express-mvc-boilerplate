@@ -1,9 +1,5 @@
 const models = require('../../app/models');
 
-beforeAll(async () => {
-  await models.User.sync({ force: true });
-});
-
 afterAll(async () => {
   await models.sequelize.close();
 });
