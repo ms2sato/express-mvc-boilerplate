@@ -12,9 +12,9 @@ if (env !== 'production') {
   const debug = require('debug')('express-mvc:sql');
   config.logging = (args) => {
     if (
-      !args.includes('DELETE FROM "Session" WHERE "expires" <') &&
-      !args.includes('UPDATE "Session" SET "expires"') &&
-      !args.includes('SELECT "sid", "expires", "data", "createdAt", "updatedAt" FROM "Session" AS')
+      !args.includes('DELETE FROM "Sessions" WHERE "expires" <') &&
+      !args.includes('UPDATE "Sessions" SET "expires"') &&
+      !args.includes('SELECT "sid", "expires", "data", "createdAt", "updatedAt" FROM "Sessions" AS')
     ) {
       debug(args);
     }
