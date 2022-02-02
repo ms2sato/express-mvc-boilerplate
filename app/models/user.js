@@ -1,6 +1,9 @@
 'use strict';
+
+const bcrypt = require('bcrypt');
+
 const {
-  Model
+  Model, ValidationError, ValidationErrorItem
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
@@ -11,6 +14,37 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(_models) {
       // define association here
+    }
+
+    static async generateHash(password) {
+      return await bcrypt.hash(password, 10);
+    }
+
+    static async register({ username, email, displayName, password, role = 0 }) {
+      if(!password) {
+        const error = new ValidationError('ログインに失敗しました', [
+          new ValidationErrorItem('ユーザーネームとパスワードが一致しません')
+        ]);
+        throw error;
+      }
+      const passwordHash = await this.generateHash(password);
+      return await this.create({ passwordHash, username, email, displayName, role });
+    }
+    
+    static async authenticate({ username, password }) {
+      const throwError = () => {
+        const error = new ValidationError('ログインに失敗しました', [
+          new ValidationErrorItem('ユーザーネームとパスワードが一致しません')
+        ]);
+        throw error;
+      };
+
+      const user = await this.findOne({ where: { username } });
+      if (!user) { throwError(); }
+
+      const match = await bcrypt.compare(password, user.passwordHash);
+      if (!match) { throwError(); }
+      return user;
     }
 
     isAdmin() {
@@ -52,6 +86,10 @@ module.exports = (sequelize, DataTypes) => {
           args: [3, 24]
         }
       }
+    },
+    passwordHash: {
+      type: DataTypes.TEXT,
+      allowNull: false,
     },
     role: {
       type: DataTypes.INTEGER,

@@ -12,6 +12,7 @@
   "dependencies": {
     "@babel/core": "^7.15.5",
     "@babel/register": "^7.15.3",
+    "bcrypt": "^5.0.1",
     "bufferutil": "^4.0.3",
     "connect-session-sequelize": "^7.1.2",
     "cookie-parser": "~1.4.3",

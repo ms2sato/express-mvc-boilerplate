@@ -20,12 +20,17 @@ passport.deserializeUser(async (userId, done) => {
 
 passport.use(new LocalStrategy(
   async (username, password, done) => {
-    // [caution!] あくまでダミーユーザー用なのでパスワードチェックはしない
-    const user = await models.User.findOne({ where: { username: username } });
-    if (!user) {
-      return done(null, false, { message: 'Incorrect username.' });
+    try {
+      const user = await models.User.authenticate({ username, password });
+      done(null, user, { message: 'ログインしました' });
+    } catch (err) {
+      if(err.errors) {
+        const message = `${err.message}: ${err.errors.map(error => error.message).join(' ')}`;
+        return done(null, false, { message });
+      } else {
+        return done(err, null);
+      }
     }
-    return done(null, user);
   }
 ));
 
@@ -33,7 +38,9 @@ router.post('/login',
   passport.authenticate('local', {
     successRedirect: '/',
     failureRedirect: '/login',
-    failureFlash: true
+    successFlash: { type: 'info' }, // req.flash('info', message) if success
+    failureFlash: { type: 'alert' }, // req.flash('alert', message) if fail
+    badRequestMessage: 'ユーザ名、パスワードを入力してください' // unless username || password
   })
 );
 

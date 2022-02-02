@@ -22,6 +22,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
+      passwordHash: {
+        type: Sequelize.TEXT,
+        allowNull: false
+      },
       role: {
         type: Sequelize.INTEGER,
         allowNull: false,

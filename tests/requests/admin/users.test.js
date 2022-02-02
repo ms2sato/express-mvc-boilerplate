@@ -12,13 +12,15 @@ beforeAll(async () => {
     username: 'admin',
     displayName: 'Admin',
     email: 'admin@example.com',
-    role: models.User.roles.admin
+    role: models.User.roles.admin,
+    passwordHash: await models.User.generateHash('password')
   });
 
   user1 = await models.User.create({
     username: 'user1',
     displayName: 'User1',
     email: 'user1@example.com',
+    passwordHash: await models.User.generateHash('password')
   });
 });
 
@@ -108,7 +110,8 @@ describe('access by admin', () => {
             username: 'admin2',
             displayName: 'Admin2',
             email: 'admin2@example.com',
-            role: models.User.roles.admin
+            role: models.User.roles.admin,
+            password: 'password'
           })
           .expect(302);
 
@@ -118,7 +121,7 @@ describe('access by admin', () => {
 
       {
         const res = await agnt.get('/admin/users');
-        expect(res.text).toContain('新規ユーザを作成しました');
+        expect(res.text).toContain(`新規ユーザー「admin2」を作成しました`);
       }
     });
   });
