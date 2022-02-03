@@ -4,10 +4,16 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "dev": "PORT=8000 nodemon ./bin/www",
+    "dev": "nodemon ./bin/www",
     "console": "node --experimental-repl-await ./bin/console",
     "lint": "npx eslint . & npx pug-lint ./views",
-    "test": "jest --runInBand"
+    "test": "jest --runInBand",
+    "db:drop": "npx sequelize-cli db:drop --debug",
+    "db:create": "npx sequelize-cli db:create --debug",
+    "db:migrate": "npx sequelize-cli db:migrate --debug",
+    "db:seed": "npx sequelize-cli db:seed:all --debug",
+    "db:reset": "npm run db:drop && npm run db:create && npm run db:migrate && npm run db:seed",
+    "routes": "DEBUG= bin/routes"
   },
   "dependencies": {
     "@babel/core": "^7.15.5",
