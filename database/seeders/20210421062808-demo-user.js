@@ -1,38 +1,31 @@
 'use strict';
 
+const models = require('../../app/models');
+
 module.exports = {
   up: async (queryInterface, _Sequelize) => {
     return queryInterface.bulkInsert('Users', [{
-      provider: 'demo',
-      uid: 'admin',
       username: 'admin',
       displayName: 'Admin',
       email: 'admin@example.com',
-      accessToken: 'accessToken',
-      refreshToken: 'refreshToken',
-      role: 1,
+      role: models.User.roles.admin,
+      passwordHash: await models.User.generateHash('password'),
       createdAt: new Date(),
       updatedAt: new Date()
     }, {
-      provider: 'demo',
-      uid: 'user1',
       username: 'user1',
       displayName: 'User1',
       email: 'user1@example.com',
-      accessToken: 'accessToken',
-      refreshToken: 'refreshToken',
-      role: 0,
+      role: models.User.roles.normal,
+      passwordHash: await models.User.generateHash('password'),
       createdAt: new Date(),
       updatedAt: new Date()
     }, {
-      provider: 'demo',
-      uid: 'user2',
       username: 'user2',
       displayName: 'User2',
       email: 'user2@example.com',
-      accessToken: 'accessToken',
-      refreshToken: 'refreshToken',
-      role: 0,
+      role: models.User.roles.normal,
+      passwordHash: await models.User.generateHash('password'),
       createdAt: new Date(),
       updatedAt: new Date()
     }]);

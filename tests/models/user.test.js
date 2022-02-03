@@ -2,6 +2,13 @@ const models = require('../../app/models');
 
 beforeAll(async () => {
   await models.User.sync({ force: true });
+
+  await models.User.create({
+    username: 'user1',
+    displayName: 'User1',
+    email: 'user1@example.com',
+    passwordHash: await models.User.generateHash('password')
+  });
 });
 
 afterAll(async () => {
@@ -20,58 +27,116 @@ describe('#isAdmin', () => {
   });
 });
 
-describe('.signIn', () => {
-  test('should new user when the first access', async () => {
-    const user = await models.User.signIn({
-      provider: 'test',
-      uid: 'uid',
-      username: 'username',
-      email: 'email@example.com',
-      displayName: 'displayName',
-      accessToken: 'accessToken',
+describe('.authenticate', () => {
+  test('should return match user', async () => {
+    const user = await models.User.authenticate({
+      username: 'user1',
+      password: 'password'
     });
 
     expect(user).not.toBeNull();
-    expect(user.provider).toBe('test');
-    expect(user.uid).toBe('uid');
-    expect(user.username).toBe('username');
-    expect(user.email).toBe('email@example.com');
-    expect(user.displayName).toBe('displayName');
-    expect(user.accessToken).toBe('accessToken');
+    expect(user.username).toBe('user1');
+    expect(user.email).toBe('user1@example.com');
+    expect(user.displayName).toBe('User1');
   });
 
-  test('should new user when more accesses', async () => {
-    {
-      const user = await models.User.signIn({
-        provider: 'test',
-        uid: 'uid',
-        username: 'username',
-        email: 'email@example.com',
-        displayName: 'displayName',
-        accessToken: 'accessToken',
+  /* eslint-disable jest/no-conditional-expect */
+
+  test('should error when not match', async () => {
+    expect.assertions(2);
+
+    try {
+      await models.User.authenticate({
+        username: 'unknown',
+        password: 'password'
       });
-
-      expect(user).not.toBeNull();
-    }
-
-    {
-      const user = await models.User.signIn({
-        provider: 'test',
-        uid: 'uid',
-        username: 'username2',
-        email: 'email2@example.com',
-        displayName: 'displayName2',
-        accessToken: 'accessToken2'
-      });
-
-      expect(user).not.toBeNull();
-      expect(user.provider).toBe('test');
-      expect(user.uid).toBe('uid');
-      expect(user.username).toBe('username2'); // changed
-      expect(user.email).toBe('email@example.com'); // not changed
-      expect(user.displayName).toBe('displayName'); // not changeed
-      expect(user.accessToken).toBe('accessToken2'); // changed
+    } catch (err) {
+      expect(err).toBeInstanceOf(models.Sequelize.ValidationError);
+      expect(err).toHaveProperty('message', 'ログインに失敗しました');
     }
   });
+
+  test('should error when username blank', async () => {
+    expect.assertions(2);
+
+    try {
+      await models.User.authenticate({
+        password: 'password'
+      });
+    } catch (err) {
+      expect(err).toBeInstanceOf(models.Sequelize.ValidationError);
+      expect(err).toHaveProperty('message', 'ログインに失敗しました');
+    }
+  });
+
+  test('should error when password blank', async () => {
+    expect.assertions(2);
+
+    try {
+      await models.User.authenticate({
+        username: 'user1'
+      });
+    } catch (err) {
+      expect(err).toBeInstanceOf(models.Sequelize.ValidationError);
+      expect(err).toHaveProperty('message', 'ログインに失敗しました');
+    }
+  });
+
+  /* eslint-enable jest/no-conditional-expect */
 });
 
+describe('.register', () => {
+  test('should save new user', async () => {
+    const user = await models.User.register({
+      username: 'user2',
+      password: 'password',
+      email: 'user2@example.com',
+      displayName: 'User2',
+      role: models.User.roles.normal
+    });
+
+    expect(user).not.toBeNull();
+    expect(user.username).toBe('user2');
+    expect(user.email).toBe('user2@example.com');
+    expect(user.displayName).toBe('User2');
+    expect(user.role).toBe(models.User.roles.normal);
+  });
+
+  /* eslint-disable jest/no-conditional-expect */
+
+  test('should error when any properties blank', async () => {
+    expect.assertions(5);
+
+    try {
+      await models.User.register({
+        password: 'password',
+      });
+    } catch (err) {
+      expect(err).toBeInstanceOf(models.Sequelize.ValidationError);
+      expect(err.errors).toHaveLength(3);
+      expect(err.errors[0]).toHaveProperty('message', 'User.username cannot be null');
+      expect(err.errors[1]).toHaveProperty('message', 'User.email cannot be null');
+      expect(err.errors[2]).toHaveProperty('message', 'User.displayName cannot be null');
+    }
+  });
+
+  test('should error when password blank', async () => {
+    expect.assertions(4);
+
+    try {
+      await models.User.register({
+        username: 'notsaved',
+        email: 'notsaved@example.com',
+        displayName: 'NotSaved',
+        role: models.User.roles.normal  
+      });
+    } catch (err) {
+      expect(err).toBeInstanceOf(models.Sequelize.ValidationError);
+      expect(err).toHaveProperty('message', 'ユーザ新規登録に失敗しました');
+      expect(err.errors).toHaveLength(1);
+      expect(err.errors[0]).toHaveProperty('message', 'パスワードは必須です');
+    }
+  });
+
+  /* eslint-enable jest/no-conditional-expect */
+});

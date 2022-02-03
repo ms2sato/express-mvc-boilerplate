@@ -17,15 +17,13 @@ class UsersController extends Controller {
 
   // POST /
   async store(req, res) {
-    const user = models.User.build(req.body);
     try {
-      let fields = ['provider', 'uid', 'username', 'email', 'displayName', 'accessToken', 'refreshToken', 'role'];
-      await user.save({ fields });
-      await req.flash('info', '新規ユーザを作成しました');
+      const user = await models.User.register(req.body);
+      await req.flash('info', `新規ユーザー「${user.username}」を作成しました`);
       res.redirect('/admin/users/');
     } catch (err) {
       if (err instanceof ValidationError) {
-        res.render('admin/users/create', { user, err });
+        res.render('admin/users/create', { user: req.body, err });
       } else {
         throw err;
       }
@@ -50,7 +48,7 @@ class UsersController extends Controller {
     try {
       user.set(req.body);
 
-      let fields = ['provider', 'uid', 'username', 'email', 'displayName', 'accessToken', 'refreshToken'];
+      let fields = ['username', 'email', 'displayName'];
       if (user.id !== req.user.id) {
         fields = [...fields, 'role'];
       }

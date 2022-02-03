@@ -9,22 +9,18 @@ beforeAll(async () => {
   await models.User.sync({ force: true });
 
   admin = await models.User.create({
-    provider: 'local',
-    uid: 'admin',
     username: 'admin',
     displayName: 'Admin',
     email: 'admin@example.com',
-    accessToken: 'accessToken',
-    role: models.User.roles.admin
+    role: models.User.roles.admin,
+    passwordHash: await models.User.generateHash('password')
   });
 
   user1 = await models.User.create({
-    provider: 'local',
-    uid: 'user1',
     username: 'user1',
     displayName: 'User1',
     email: 'user1@example.com',
-    accessToken: 'accessToken'
+    passwordHash: await models.User.generateHash('password')
   });
 });
 
@@ -111,13 +107,11 @@ describe('access by admin', () => {
         const res = await agnt
           .post('/admin/users')
           .send({
-            provider: 'local',
-            uid: 'admin2',
             username: 'admin2',
             displayName: 'Admin2',
             email: 'admin2@example.com',
-            accessToken: 'accessToken',
-            role: models.User.roles.admin
+            role: models.User.roles.admin,
+            password: 'password'
           })
           .expect(302);
 
@@ -127,7 +121,7 @@ describe('access by admin', () => {
 
       {
         const res = await agnt.get('/admin/users');
-        expect(res.text).toContain('新規ユーザを作成しました');
+        expect(res.text).toContain(`新規ユーザー「admin2」を作成しました`);
       }
     });
   });
@@ -140,12 +134,9 @@ describe('access by admin', () => {
         const res = await agnt
           .put(`/admin/users/${admin2.id}`)
           .send({
-            provider: 'local',
-            uid: 'admin2-edit',
             username: 'admin2-edit',
             displayName: 'Admin2-edit',
             email: 'admin2-edit@example.com',
-            accessToken: 'accessToken',
             role: models.User.roles.normal
           })
           .expect(302);

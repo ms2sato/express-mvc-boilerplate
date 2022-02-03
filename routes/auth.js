@@ -2,15 +2,8 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const GitHubStrategy = require('passport-github2').Strategy;
 
 const models = require('../app/models');
-
-const gitHubConfig = {
-  clientID: process.env.GITHUB_CLIENT_ID,
-  clientSecret: process.env.GITHUB_CLIENT_SECRET,
-  callbackURL: '/auth/github/callback'
-};
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
@@ -25,53 +18,54 @@ passport.deserializeUser(async (userId, done) => {
   done(null, user);
 });
 
-if (process.env.NODE_ENV !== 'production') {
-  passport.use(new LocalStrategy(
-    async (username, password, done) => {
-      // [caution!] あくまでダミーユーザー用なのでパスワードチェックはしない
-      const user = await models.User.findOne({ where: { username: username } });
-      if (!user) {
-        return done(null, false, { message: 'Incorrect username.' });
+passport.use(new LocalStrategy(
+  async (username, password, done) => {
+    try {
+      const user = await models.User.authenticate({ username, password });
+      done(null, user);
+    } catch (err) {
+      done(err, null);
+    }
+  }
+));
+
+router.post('/login', (req, res, next) => {
+  passport.authenticate('local', {}, (err, user) => {
+    if (err) {
+      if (err.errors) {
+        return res.render('login', { err });
+      } else {
+        return next(err);
       }
-      return done(null, user);
     }
-  ));
 
-  router.post('/login',
-    passport.authenticate('local', {
-      successRedirect: '/',
-      failureRedirect: '/login',
-      failureFlash: true
-    })
-  );
-}
+    if (!user) {
+      return res.render('login', {
+        user: req.user, err: new Error('ユーザ名、パスワードを入力してください')
+      });
+    }
 
-if (process.env.NODE_ENV !== 'test') {
-  passport.use(new GitHubStrategy(gitHubConfig, async (accessToken, refreshToken, profile, done) => {
-    const user = await models.User.signIn({
-      provider: profile.provider,
-      uid: profile.id,
-      username: profile.username,
-      displayName: profile.displayName || profile.username,
-      email: profile.emails[0].value,
-      accessToken,
-      refreshToken
+    // @see https://qiita.com/KeitaMoromizato/items/55c35a5d6d039aa7a385
+    req.session.regenerate((err) => {
+      if (err) {
+        return next(err);
+      }
+
+      req.login(user, (err) => {
+        if (err) {
+          return next(err);
+        }
+
+        req.flash('info', 'ログインしました');
+        res.redirect('/');
+      });
     });
-    done(null, user);
-  }));
 
-  router.get('/auth/github', passport.authenticate('github', { scope: ['user:email'] }));
-
-  router.get(gitHubConfig.callbackURL,
-    passport.authenticate('github', { failureRedirect: 'login' }),
-    (req, res) => {
-      res.redirect('/');
-    }
-  );
-}
+  })(req, res, next);
+});
 
 router.get('/login', (req, res, _next) => {
-  res.render('login', { user: req.user });
+  res.render('login');
 });
 
 router.get('/logout', (req, res, _next) => {

@@ -1,6 +1,16 @@
 'use strict';
+
+const bcrypt = require('bcrypt');
+
+const throwValidationError = (message, itemMessage) => {
+  const error = new ValidationError(message, [
+    new ValidationErrorItem(itemMessage)
+  ]);
+  throw error;
+};
+
 const {
-  Model
+  Model, ValidationError, ValidationErrorItem
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
@@ -13,20 +23,33 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
 
-    static async signIn(params) {
-      const user = await this.findOne({ where: { provider: params.provider, uid: params.uid } });
-      if (user) {
-        user.set({
-          username: params.username,
-          accessToken: params.accessToken,
-          refreshToken: params.refreshToken
-        });
-        await user.save();
-        return user;
-      } else {
-        const fields = ['provider', 'uid', 'username', 'displayName', 'email', 'accessToken', 'refreshToken'];
-        return await this.create(params, { fields });
+    static async generateHash(password) {
+      return await bcrypt.hash(password, 10);
+    }
+
+    static async register({ username, email, displayName, password, role = 0 }) {
+      if(!password) {
+        throwValidationError('ユーザ新規登録に失敗しました', 'パスワードは必須です');
       }
+      const passwordHash = await this.generateHash(password);
+      return await this.create({ passwordHash, username, email, displayName, role });
+    }
+    
+    static async authenticate({ username, password }) {
+      const errorMessage = 'ログインに失敗しました';
+      if(!username) {
+        throwValidationError(errorMessage, 'usernameは必須です');
+      }
+      if(!password) {
+        throwValidationError(errorMessage, 'passwordは必須です');
+      }
+
+      const user = await this.findOne({ where: { username } });
+      if (!user) { throwValidationError(errorMessage, 'ユーザーネームとパスワードが一致しません'); }
+
+      const match = await bcrypt.compare(password, user.passwordHash);
+      if (!match) { throwValidationError(errorMessage, 'ユーザーネームとパスワードが一致しません'); }
+      return user;
     }
 
     isAdmin() {
@@ -35,24 +58,6 @@ module.exports = (sequelize, DataTypes) => {
   }
   User.roles = { normal: 0, admin: 1 };
   User.init({
-    provider: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: {
-          msg: 'providerは必須です'
-        }
-      }
-    },
-    uid: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: {
-          msg: 'uidは必須です'
-        }
-      }
-    },
     username: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -87,6 +92,10 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
+    passwordHash: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
     role: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -100,18 +109,6 @@ module.exports = (sequelize, DataTypes) => {
           args: [Object.values(User.roles)]
         }
       }
-    },
-    accessToken: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-      validate: {
-        notEmpty: {
-          msg: 'アクセストークンは必須です'
-        }
-      }
-    },
-    refreshToken: {
-      type: DataTypes.TEXT
     },
   }, {
     sequelize,

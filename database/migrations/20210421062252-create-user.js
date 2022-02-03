@@ -8,16 +8,9 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      provider: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      uid: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
       username: {
         type: Sequelize.STRING,
+        unique: true,
         allowNull: false
       },
       email: {
@@ -29,12 +22,9 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      accessToken: {
+      passwordHash: {
         type: Sequelize.TEXT,
         allowNull: false
-      },
-      refreshToken: {
-        type: Sequelize.TEXT
       },
       role: {
         type: Sequelize.INTEGER,
@@ -50,11 +40,8 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
-
-    await queryInterface.addIndex('Users', ['provider', 'uid'], { unique: true });
   },
   down: async (queryInterface, _Sequelize) => {
-    await queryInterface.removeIndex('Users', ['provider', 'uid']);
     await queryInterface.dropTable('Users');
   }
 };

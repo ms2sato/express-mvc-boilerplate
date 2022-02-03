@@ -1,19 +1,24 @@
 extends layout 
 
 block content 
-  a(href="/auth/github") GitHubでログイン
-  if(user)
-    p 現在 #{user.username} でログイン中
+  - if(err)
+    - if(err.errors)
+      ul.errors
+        each error in err.errors
+          li= error.message
+    - else
+      ul.errors
+        li= err.message
 
-  if(process.env.NODE_ENV !== 'production' || process.env.FORCE_DUMMY_LOGIN)
-    h2 ダミーログイン
-    form(action="/login" method="post")
-      _csrf
-      div
-        label Username:
-        input(type="text", name="username")
-      div
-        label password:
-        input(type="password", name="password", value="password")
-      div
-        input(type="submit", value="ログイン")
+  h2 ログイン
+  form(action="/login" method="post")
+    _csrf
+
+    div
+      label Username:
+      input(type="text", name="username")
+    div
+      label password:
+      input(type="password", name="password", value=(process.env.NODE_ENV!='production') ? "password": '')
+    div
+      input(type="submit", value="ログイン")
