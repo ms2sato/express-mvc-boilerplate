@@ -1,12 +1,19 @@
 extends layout 
 
 block content 
-  if(user)
-    p 現在 #{user.username} でログイン中
+  - if(err)
+    - if(err.errors)
+      ul.errors
+        each error in err.errors
+          li= error.message
+    - else
+      ul.errors
+        li= err.message
 
   h2 ログイン
   form(action="/login" method="post")
     _csrf
+
     div
       label Username:
       input(type="text", name="username")
