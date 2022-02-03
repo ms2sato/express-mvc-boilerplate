@@ -48,13 +48,11 @@ router.post('/login', (req, res, next) => {
     // @see https://qiita.com/KeitaMoromizato/items/55c35a5d6d039aa7a385
     req.session.regenerate((err) => {
       if (err) {
-        console.error(err);
         return next(err);
       }
 
       req.login(user, (err) => {
         if (err) {
-          console.error(err);
           return next(err);
         }
 

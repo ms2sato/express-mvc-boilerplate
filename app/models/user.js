@@ -2,6 +2,13 @@
 
 const bcrypt = require('bcrypt');
 
+const throwValidationError = (message, itemMessage) => {
+  const error = new ValidationError(message, [
+    new ValidationErrorItem(itemMessage)
+  ]);
+  throw error;
+};
+
 const {
   Model, ValidationError, ValidationErrorItem
 } = require('sequelize');
@@ -22,28 +29,26 @@ module.exports = (sequelize, DataTypes) => {
 
     static async register({ username, email, displayName, password, role = 0 }) {
       if(!password) {
-        const error = new ValidationError('ログインに失敗しました', [
-          new ValidationErrorItem('ユーザーネームとパスワードが一致しません')
-        ]);
-        throw error;
+        throwValidationError('ユーザ新規登録に失敗しました', 'パスワードは必須です');
       }
       const passwordHash = await this.generateHash(password);
       return await this.create({ passwordHash, username, email, displayName, role });
     }
     
     static async authenticate({ username, password }) {
-      const throwError = () => {
-        const error = new ValidationError('ログインに失敗しました', [
-          new ValidationErrorItem('ユーザーネームとパスワードが一致しません')
-        ]);
-        throw error;
-      };
+      const errorMessage = 'ログインに失敗しました';
+      if(!username) {
+        throwValidationError(errorMessage, 'usernameは必須です');
+      }
+      if(!password) {
+        throwValidationError(errorMessage, 'passwordは必須です');
+      }
 
       const user = await this.findOne({ where: { username } });
-      if (!user) { throwError(); }
+      if (!user) { throwValidationError(errorMessage, 'ユーザーネームとパスワードが一致しません'); }
 
       const match = await bcrypt.compare(password, user.passwordHash);
-      if (!match) { throwError(); }
+      if (!match) { throwValidationError(errorMessage, 'ユーザーネームとパスワードが一致しません'); }
       return user;
     }
 
