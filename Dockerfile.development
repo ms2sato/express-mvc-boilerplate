@@ -1,0 +1,12 @@
+FROM node:14-alpine
+
+ENV LANG C.UTF-8
+ENV TZ Asia/Tokyo
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+WORKDIR /work
+
+RUN npm install -g npm@latest
+
+COPY package.json ./
+COPY package-lock.json ./
